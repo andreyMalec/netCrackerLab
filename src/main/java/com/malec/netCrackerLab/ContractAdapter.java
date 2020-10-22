@@ -2,24 +2,13 @@ package com.malec.netCrackerLab;
 
 import com.malec.netCrackerLab.model.Contract;
 
-public class ContractAdapter {
-    private static final int EXTENSION_SIZE = 10;
-
-    private int size;
-    private Contract[] contracts;
-
+public class ContractAdapter extends ArrayAdapter<Contract> {
     public ContractAdapter() {
-        this.size = 0;
-        this.contracts = new Contract[size];
+        super();
     }
 
     public ContractAdapter(ContractAdapter anotherAdapter) {
-        this.size = anotherAdapter.size;
-        this.contracts = anotherAdapter.contracts.clone();
-    }
-
-    public int getSize() {
-        return size;
+        super(anotherAdapter);
     }
 
     /**
@@ -27,14 +16,9 @@ public class ContractAdapter {
      *
      * @param element new contract
      */
+    @Override
     public void add(Contract element) {
-        if (isNotFull()) {
-            contracts[size] = element;
-            size++;
-        } else {
-            expand();
-            add(element);
-        }
+        super.add(element);
     }
 
     /**
@@ -44,18 +28,9 @@ public class ContractAdapter {
      * @param index   position in the list
      * @throws IndexOutOfBoundsException index
      */
+    @Override
     public void insert(Contract element, int index) {
-        if (size == 0 || index == size) {
-            add(element);
-            return;
-        }
-
-        checkBounds(index);
-
-        size++;
-        Contract[] tmp = incSizeBetween(index);
-        tmp[index] = element;
-        contracts = tmp;
+        super.insert(element, index);
     }
 
     /**
@@ -65,14 +40,9 @@ public class ContractAdapter {
      * @return deleted element
      * @throws IndexOutOfBoundsException index
      */
+    @Override
     public Contract removeAt(int index) {
-        checkBounds(index);
-
-        size--;
-        Contract element = contracts[index];
-        contracts = decSizeBetween(index);
-
-        return element;
+        return super.removeAt(index);
     }
 
     /**
@@ -97,7 +67,7 @@ public class ContractAdapter {
     public int indexById(Integer id) {
         int index = -1;
         for (int i = 0; i < size; i++)
-            if (contracts[i].id.equals(id)) {
+            if (((Contract) data[i]).id.equals(id)) {
                 index = i;
                 break;
             }
@@ -109,16 +79,18 @@ public class ContractAdapter {
      * @param contract required contract
      * @return index of the required contract in the list
      */
+    @Override
     public int indexOf(Contract contract) {
-        return indexById(contract.id);
+        return super.indexOf(contract);
     }
 
     /**
      * @param contract required contract
      * @return true if required contract contains in the list
      */
+    @Override
     public boolean contains(Contract contract) {
-        return indexOf(contract) != -1;
+        return super.contains(contract);
     }
 
     /**
@@ -129,7 +101,7 @@ public class ContractAdapter {
         int index = indexById(id);
 
         if (index >= 0)
-            return contracts[index];
+            return (Contract) data[index];
         else
             return null;
     }
@@ -140,48 +112,6 @@ public class ContractAdapter {
      * @throws IndexOutOfBoundsException index
      */
     public Contract getByIndex(int index) {
-        checkBounds(index);
-
-        return contracts[index];
-    }
-
-    @Override
-    public ContractAdapter clone() {
-        try {
-            super.clone();
-        } catch (Exception ignored) { }
-
-        return new ContractAdapter(this);
-    }
-
-    private Contract[] incSizeBetween(int index) {
-        int count = size - index - 1;
-        Contract[] tmp = new Contract[size];
-        System.arraycopy(contracts, 0, tmp, 0, index);
-        System.arraycopy(contracts, index, tmp, index + 1, count);
-        return tmp;
-    }
-
-    private Contract[] decSizeBetween(int index) {
-        int count = size - index;
-        Contract[] tmp = new Contract[size];
-        System.arraycopy(contracts, 0, tmp, 0, index);
-        System.arraycopy(contracts, index + 1, tmp, index, count);
-        return tmp;
-    }
-
-    private void expand() {
-        Contract[] tmp = contracts.clone();
-        contracts = new Contract[tmp.length + EXTENSION_SIZE];
-        System.arraycopy(tmp, 0, contracts, 0, size);
-    }
-
-    private void checkBounds(int index) {
-        if (index >= size || index < 0)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-    }
-
-    private boolean isNotFull() {
-        return size < contracts.length;
+        return super.getByIndex(index);
     }
 }
