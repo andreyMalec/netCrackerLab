@@ -1,6 +1,8 @@
 package com.malec.netCrackerLab;
 
 import com.malec.netCrackerLab.model.Contract;
+import com.malec.netCrackerLab.util.ArrayComparator;
+import com.malec.netCrackerLab.util.ArraySorter;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
     public ContractAdapter() {
@@ -91,6 +93,16 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     @Override
     public boolean contains(Contract contract) {
         return super.contains(contract);
+    }
+
+    /**
+     * Sorts the data according to the order induced by the specified comparator
+     * @param sorter implementation of the {@link ArraySorter} class that defines the sorting algorithm
+     * @param comparator implementation of the {@link ArrayComparator} class that specified sorting field
+     */
+    @Override
+    public void sort(ArraySorter sorter, ArrayComparator<? super Contract> comparator) {
+        super.sort(sorter, comparator);
     }
 
     /**

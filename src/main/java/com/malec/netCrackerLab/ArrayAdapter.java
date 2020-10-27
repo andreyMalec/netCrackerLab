@@ -1,5 +1,8 @@
 package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.util.ArrayComparator;
+import com.malec.netCrackerLab.util.ArraySorter;
+
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
 
@@ -24,8 +27,7 @@ public class ArrayAdapter<T> {
         if (isFull())
             expand();
 
-        data[size] = element;
-        size++;
+        data[size++] = element;
     }
 
     public void insert(T element, int index) {
@@ -70,6 +72,10 @@ public class ArrayAdapter<T> {
         checkBounds(index);
 
         return (T) data[index];
+    }
+
+    public void sort(ArraySorter sorter, ArrayComparator<? super T> comparator) {
+        sorter.sort((T[]) data, 0, size - 1, comparator);
     }
 
     @Override

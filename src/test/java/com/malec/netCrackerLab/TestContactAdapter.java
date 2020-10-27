@@ -4,6 +4,9 @@ import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
+import com.malec.netCrackerLab.util.ArrayComparator;
+import com.malec.netCrackerLab.util.BubbleSorter;
+import com.malec.netCrackerLab.util.QuickSorter;
 
 import org.junit.Test;
 
@@ -16,6 +19,34 @@ import static org.junit.Assert.assertTrue;
 
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
+
+    @Test
+    public void testBubbleSort() {
+        ContractAdapter adapter = new ContractAdapter();
+        fillRandom(adapter);
+
+        ArrayComparator<Contract> idComparator = (first, second) -> first.getId() - second.getId();
+
+        adapter.sort(new BubbleSorter(), idComparator);
+        assertEquals(0, (int) adapter.getByIndex(0).getId());
+        assertEquals(2, (int) adapter.getByIndex(1).getId());
+        assertEquals(15, (int) adapter.getByIndex(2).getId());
+        assertEquals(42, (int) adapter.getByIndex(3).getId());
+    }
+
+    @Test
+    public void testQuickSort() {
+        ContractAdapter adapter = new ContractAdapter();
+        fillRandom(adapter);
+
+        ArrayComparator<Contract> startDateComparator = (first, second) -> Long.compare(first.getStartDate(), second.getStartDate());
+
+        adapter.sort(new QuickSorter(), startDateComparator);
+        assertEquals(15, (int) adapter.getByIndex(0).getId());
+        assertEquals(42, (int) adapter.getByIndex(1).getId());
+        assertEquals(0, (int) adapter.getByIndex(2).getId());
+        assertEquals(2, (int) adapter.getByIndex(3).getId());
+    }
 
     @Test
     public void testGetById() {
@@ -112,5 +143,12 @@ public class TestContactAdapter {
         adapter.add(new InternetContract(1, 1L, 1L, client, 11));
         adapter.add(new InternetContract(2, 2L, 2L, client, 12));
         adapter.add(new InternetContract(3, 3L, 3L, client, 13));
+    }
+
+    private void fillRandom(ContractAdapter adapter) {
+        adapter.add(new InternetContract(2, 22L, 23L, client, 12));
+        adapter.add(new InternetContract(42, 4L, 4L, client, 4));
+        adapter.add(new InternetContract(0, 9L, 6L, client, 3));
+        adapter.add(new InternetContract(15, 2L, 3L, client, 4));
     }
 }
