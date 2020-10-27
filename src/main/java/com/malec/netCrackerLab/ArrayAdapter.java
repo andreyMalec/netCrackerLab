@@ -31,7 +31,7 @@ public class ArrayAdapter<T> {
     }
 
     public void insert(T element, int index) {
-        if (size == 0 || index == size) {
+        if (index == size) {
             add(element);
             return;
         }
@@ -39,9 +39,8 @@ public class ArrayAdapter<T> {
         checkBounds(index);
 
         size++;
-        Object[] tmp = incSizeBetween(index);
-        tmp[index] = element;
-        data = tmp;
+        incSizeBetween(index);
+        data[index] = element;
     }
 
     public T removeAt(int index) {
@@ -49,7 +48,7 @@ public class ArrayAdapter<T> {
 
         size--;
         T element = (T) data[index];
-        data = decSizeBetween(index);
+        decSizeBetween(index);
 
         return element;
     }
@@ -84,20 +83,20 @@ public class ArrayAdapter<T> {
         return new ArrayAdapter<T>(this);
     }
 
-    protected Object[] incSizeBetween(int index) {
+    protected void incSizeBetween(int index) {
         int count = size - index - 1;
         Object[] tmp = new Object[size];
         System.arraycopy(data, 0, tmp, 0, index);
         System.arraycopy(data, index, tmp, index + 1, count);
-        return tmp;
+        data = tmp;
     }
 
-    protected Object[] decSizeBetween(int index) {
+    protected void decSizeBetween(int index) {
         int count = size - index;
         Object[] tmp = new Object[size];
         System.arraycopy(data, 0, tmp, 0, index);
         System.arraycopy(data, index + 1, tmp, index, count);
-        return tmp;
+        data = tmp;
     }
 
     protected void expand() {
