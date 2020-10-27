@@ -8,4 +8,8 @@ public class InternetContract extends Contract {
 
         this.speedLimit = speedLimit;
     }
+
+    public Integer getSpeedLimit() {
+        return speedLimit;
+    }
 }

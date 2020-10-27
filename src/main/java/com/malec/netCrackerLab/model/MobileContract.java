@@ -10,4 +10,16 @@ public class MobileContract extends Contract {
         this.sms = sms;
         this.gb = gb;
     }
+
+    public Integer getMinutes() {
+        return minutes;
+    }
+
+    public Integer getSms() {
+        return sms;
+    }
+
+    public Integer getGb() {
+        return gb;
+    }
 }

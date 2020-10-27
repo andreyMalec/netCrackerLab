@@ -15,4 +15,16 @@ public abstract class Contract {
     public Integer getId() {
         return id;
     }
+
+    public Long getStartDate() {
+        return startDate;
+    }
+
+    public Long getEndDate() {
+        return endDate;
+    }
+
+    public Client getClient() {
+        return client;
+    }
 }

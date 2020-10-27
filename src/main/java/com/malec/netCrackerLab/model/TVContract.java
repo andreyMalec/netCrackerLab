@@ -8,4 +8,8 @@ public class TVContract extends Contract {
 
         this.tvPackage = tvPackage;
     }
+
+    public TVPackage getTvPackage() {
+        return tvPackage;
+    }
 }

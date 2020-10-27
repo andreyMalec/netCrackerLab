@@ -21,13 +21,11 @@ public class ArrayAdapter<T> {
     }
 
     public void add(T element) {
-        if (isNotFull()) {
-            data[size] = element;
-            size++;
-        } else {
+        if (isFull())
             expand();
-            add(element);
-        }
+
+        data[size] = element;
+        size++;
     }
 
     public void insert(T element, int index) {
@@ -110,7 +108,7 @@ public class ArrayAdapter<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
     }
 
-    protected boolean isNotFull() {
-        return size < data.length;
+    protected boolean isFull() {
+        return size >= data.length;
     }
 }
