@@ -4,8 +4,8 @@ import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
-import com.malec.netCrackerLab.util.ArrayComparator;
 import com.malec.netCrackerLab.util.BubbleSorter;
+import com.malec.netCrackerLab.util.LinearSearcher;
 import com.malec.netCrackerLab.util.QuickSorter;
 
 import org.junit.Test;
@@ -21,13 +21,20 @@ public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
 
     @Test
+    public void testSearch() {
+        ContractAdapter adapter = new ContractAdapter();
+        fillRandom(adapter);
+
+        Contract c = adapter.search(new LinearSearcher(), (element) -> element.getId().equals(42));
+        assertEquals(c, adapter.getById(42));
+    }
+
+    @Test
     public void testBubbleSort() {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayComparator<Contract> idComparator = (first, second) -> first.getId() - second.getId();
-
-        adapter.sort(new BubbleSorter(), idComparator);
+        adapter.sort(new BubbleSorter(), (first, second) -> Integer.compare(first.getId(), second.getId()));
         assertEquals(0, (int) adapter.getByIndex(0).getId());
         assertEquals(2, (int) adapter.getByIndex(1).getId());
         assertEquals(15, (int) adapter.getByIndex(2).getId());
@@ -39,9 +46,7 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayComparator<Contract> startDateComparator = (first, second) -> Long.compare(first.getStartDate(), second.getStartDate());
-
-        adapter.sort(new QuickSorter(), startDateComparator);
+        adapter.sort(new QuickSorter(), (first, second) -> Long.compare(first.getStartDate(), second.getStartDate()));
         assertEquals(15, (int) adapter.getByIndex(0).getId());
         assertEquals(42, (int) adapter.getByIndex(1).getId());
         assertEquals(0, (int) adapter.getByIndex(2).getId());

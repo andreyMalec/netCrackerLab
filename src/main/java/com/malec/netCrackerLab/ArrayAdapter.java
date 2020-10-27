@@ -1,7 +1,10 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.util.ArrayComparator;
+import com.malec.netCrackerLab.util.ArraySearcher;
 import com.malec.netCrackerLab.util.ArraySorter;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
@@ -74,7 +77,11 @@ public class ArrayAdapter<T> {
         return (T) data[index];
     }
 
-    public void sort(ArraySorter sorter, ArrayComparator<? super T> comparator) {
+    public T search(ArraySearcher searcher, Function<? super T, Boolean> predicate) {
+        return searcher.search((T[]) data, 0, size - 1, predicate);
+    }
+
+    public void sort(ArraySorter sorter, BiFunction<? super T, ? super T, Integer> comparator) {
         sorter.sort((T[]) data, 0, size - 1, comparator);
     }
 
