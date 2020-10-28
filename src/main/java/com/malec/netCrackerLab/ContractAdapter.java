@@ -1,11 +1,11 @@
 package com.malec.netCrackerLab;
 
 import com.malec.netCrackerLab.model.Contract;
-import com.malec.netCrackerLab.util.ArraySearcher;
-import com.malec.netCrackerLab.util.ArraySorter;
+import com.malec.netCrackerLab.util.AdapterSorter;
+import com.malec.netCrackerLab.util.ArrayAdapter;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.ToIntBiFunction;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
     public ContractAdapter() {
@@ -14,6 +14,10 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
 
     public ContractAdapter(ContractAdapter anotherAdapter) {
         super(anotherAdapter);
+    }
+
+    private ContractAdapter(ArrayAdapter<Contract> superAdapter) {
+        super(superAdapter);
     }
 
     /**
@@ -101,26 +105,49 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     /**
      * Sorts the data according to the order induced by the specified comparator
      *
-     * @param sorter     implementation of the {@link ArraySorter} class that defines the sorting algorithm
+     * @param sorter     implementation of the {@link AdapterSorter} class that defines the sorting algorithm
      * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
      *                   if (x < y) then it returns a value less than zero and
      *                   if (x > y) then it returns a value greater than zero
      */
     @Override
-    public void sort(ArraySorter sorter, BiFunction<? super Contract, ? super Contract, Integer> comparator) {
-        super.sort(sorter, comparator);
+    public ContractAdapter sort(AdapterSorter sorter, ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+        return new ContractAdapter(super.sort(sorter, comparator));
+    }
+
+    /**
+     * Sorts the data according to the order induced by the specified comparator with QuickSort algorithm
+     *
+     * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
+     *                   if (x < y) then it returns a value less than zero and
+     *                   if (x > y) then it returns a value greater than zero
+     */
+    @Override
+    public ContractAdapter sort(ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+        return new ContractAdapter(super.sort(comparator));
+    }
+
+    /**
+     * Sorts the data according to the order induced by the specified comparator with BubbleSort algorithm
+     *
+     * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
+     *                   if (x < y) then it returns a value less than zero and
+     *                   if (x > y) then it returns a value greater than zero
+     */
+    @Override
+    public ContractAdapter bubbleSort(ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+        return new ContractAdapter(super.bubbleSort(comparator));
     }
 
     /**
      * Search the data by the specified predicate
      *
-     * @param searcher  implementation of the {@link ArraySearcher} class that defines the searching algorithm
      * @param predicate lambda that specified searching method. Compare contract and return true if it equal to your specified value else false
      * @return required contract
      */
     @Override
-    public Contract search(ArraySearcher searcher, Function<? super Contract, Boolean> predicate) {
-        return super.search(searcher, predicate);
+    public ContractAdapter filter(Function<? super Contract, Boolean> predicate) {
+        return new ContractAdapter(super.filter(predicate));
     }
 
     /**

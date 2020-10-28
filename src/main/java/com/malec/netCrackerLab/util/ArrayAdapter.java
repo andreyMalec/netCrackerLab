@@ -1,13 +1,15 @@
-package com.malec.netCrackerLab;
+package com.malec.netCrackerLab.util;
 
-import com.malec.netCrackerLab.util.ArraySearcher;
-import com.malec.netCrackerLab.util.ArraySorter;
-
-import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.ToIntBiFunction;
 
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
+
+    protected static final AdapterFilter filter = new AdapterFilter() {};
+
+    protected static final AdapterSorter sorter = new QuickSorter();
+    protected static final AdapterSorter bubbleSorter = new BubbleSorter();
 
     protected int size;
     protected Object[] data;
@@ -77,12 +79,29 @@ public class ArrayAdapter<T> {
         return (T) data[index];
     }
 
-    public T search(ArraySearcher searcher, Function<? super T, Boolean> predicate) {
-        return searcher.search((T[]) data, 0, size - 1, predicate);
+    public ArrayAdapter<T> filter(Function<? super T, Boolean> predicate) {
+        return filter.filter(this, 0, size - 1, predicate);
     }
 
-    public void sort(ArraySorter sorter, BiFunction<? super T, ? super T, Integer> comparator) {
-        sorter.sort((T[]) data, 0, size - 1, comparator);
+    public ArrayAdapter<T> sort(AdapterSorter sorter, ToIntBiFunction<? super T, ? super T> comparator) {
+        return sorter.sort(this, 0, size - 1, comparator);
+    }
+
+    public ArrayAdapter<T> sort(ToIntBiFunction<? super T, ? super T> comparator) {
+        return sort(sorter, comparator);
+    }
+
+    public ArrayAdapter<T> bubbleSort(ToIntBiFunction<? super T, ? super T> comparator) {
+        return sort(bubbleSorter, comparator);
+    }
+
+    public void swap(int firstIndex, int secondIndex) {
+        checkBounds(firstIndex);
+        checkBounds(secondIndex);
+
+        Object temp = data[firstIndex];
+        data[firstIndex] = data[secondIndex];
+        data[secondIndex] = temp;
     }
 
     @Override
@@ -123,5 +142,19 @@ public class ArrayAdapter<T> {
 
     protected boolean isFull() {
         return size >= data.length;
+    }
+
+    protected abstract static class AdapterFilter {
+        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int endIndex, Function<? super T, Boolean> predicate) {
+            ArrayAdapter<T> filtered = new ArrayAdapter<>();
+
+            for (int i = startIndex; i < endIndex + 1; i++) {
+                T element = adapter.getByIndex(i);
+                if (predicate.apply(element))
+                    filtered.add(element);
+            }
+
+            return filtered;
+        }
     }
 }

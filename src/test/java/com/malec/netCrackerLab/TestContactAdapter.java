@@ -4,9 +4,6 @@ import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
-import com.malec.netCrackerLab.util.BubbleSorter;
-import com.malec.netCrackerLab.util.LinearSearcher;
-import com.malec.netCrackerLab.util.QuickSorter;
 
 import org.junit.Test;
 
@@ -25,8 +22,9 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        Contract c = adapter.search(new LinearSearcher(), (element) -> element.getId().equals(42));
-        assertEquals(c, adapter.getById(42));
+        ContractAdapter filtered = adapter.filter((element) -> ((InternetContract) element).getSpeedLimit().equals(4));
+        assertNotNull(filtered.getById(42));
+        assertNotNull(filtered.getById(15));
     }
 
     @Test
@@ -34,11 +32,11 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        adapter.sort(new BubbleSorter(), (first, second) -> Integer.compare(first.getId(), second.getId()));
-        assertEquals(0, (int) adapter.getByIndex(0).getId());
-        assertEquals(2, (int) adapter.getByIndex(1).getId());
-        assertEquals(15, (int) adapter.getByIndex(2).getId());
-        assertEquals(42, (int) adapter.getByIndex(3).getId());
+        ContractAdapter sorted = adapter.bubbleSort((first, second) -> Integer.compare(first.getId(), second.getId()));
+        assertEquals(0, (int) sorted.getByIndex(0).getId());
+        assertEquals(2, (int) sorted.getByIndex(1).getId());
+        assertEquals(15, (int) sorted.getByIndex(2).getId());
+        assertEquals(42, (int) sorted.getByIndex(3).getId());
     }
 
     @Test
@@ -46,11 +44,11 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        adapter.sort(new QuickSorter(), (first, second) -> Long.compare(first.getStartDate(), second.getStartDate()));
-        assertEquals(15, (int) adapter.getByIndex(0).getId());
-        assertEquals(42, (int) adapter.getByIndex(1).getId());
-        assertEquals(0, (int) adapter.getByIndex(2).getId());
-        assertEquals(2, (int) adapter.getByIndex(3).getId());
+        ContractAdapter sorted = adapter.sort((first, second) -> Long.compare(first.getStartDate(), second.getStartDate()));
+        assertEquals(15, (int) sorted.getByIndex(0).getId());
+        assertEquals(42, (int) sorted.getByIndex(1).getId());
+        assertEquals(0, (int) sorted.getByIndex(2).getId());
+        assertEquals(2, (int) sorted.getByIndex(3).getId());
     }
 
     @Test
