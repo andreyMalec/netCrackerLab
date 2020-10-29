@@ -4,6 +4,7 @@ import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
+import com.malec.netCrackerLab.util.ArrayAdapter;
 
 import org.junit.Test;
 
@@ -18,7 +19,36 @@ public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
 
     @Test
-    public void testSearch() {
+    public void testSortFilterMapChain() {
+        ContractAdapter adapter = new ContractAdapter();
+        fillRandom(adapter);
+
+        ArrayAdapter<Integer> newAdapter = adapter.sort(
+                (o1, o2) -> Integer.compare(o1.getId(), o2.getId())
+        ).filter(
+                (it) -> ((InternetContract)it).getSpeedLimit() == 4
+        ).map(
+                (it) -> it.getId()
+        );
+
+        assertEquals(15, (int) newAdapter.getByIndex(0));
+        assertEquals(42, (int) newAdapter.getByIndex(1));
+    }
+
+    @Test
+    public void testMap() {
+        ContractAdapter adapter = new ContractAdapter();
+        fillRandom(adapter);
+
+        ArrayAdapter<Integer> mapped = adapter.map((element) -> ((InternetContract) element).getSpeedLimit());
+        assertEquals(12, (int) mapped.getByIndex(0));
+        assertEquals(4, (int) mapped.getByIndex(1));
+        assertEquals(3, (int) mapped.getByIndex(2));
+        assertEquals(4, (int) mapped.getByIndex(3));
+    }
+
+    @Test
+    public void testFilter() {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 

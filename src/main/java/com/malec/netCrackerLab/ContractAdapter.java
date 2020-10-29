@@ -74,14 +74,11 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      * @return index of the required contract in the list
      */
     public int indexById(Integer id) {
-        int index = -1;
         for (int i = 0; i < size; i++)
-            if (((Contract) data[i]).getId().equals(id)) {
-                index = i;
-                break;
-            }
+            if (((Contract) data[i]).getId().equals(id))
+                return i;
 
-        return index;
+        return -1;
     }
 
     /**

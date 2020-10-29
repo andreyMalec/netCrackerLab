@@ -95,6 +95,15 @@ public class ArrayAdapter<T> {
         return sort(bubbleSorter, comparator);
     }
 
+    public <E> ArrayAdapter<E> map(Function<? super T, E> mapper) {
+        ArrayAdapter<E> mapped = new ArrayAdapter<>();
+
+        for (int i = 0; i < size; i++)
+            mapped.add(mapper.apply((T) data[i]));
+
+        return mapped;
+    }
+
     public void swap(int firstIndex, int secondIndex) {
         checkBounds(firstIndex);
         checkBounds(secondIndex);
