@@ -4,8 +4,8 @@ import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.util.AdapterSorter;
 import com.malec.netCrackerLab.util.ArrayAdapter;
 
-import java.util.function.Function;
-import java.util.function.ToIntBiFunction;
+import java.util.Comparator;
+import java.util.function.Predicate;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
     public ContractAdapter() {
@@ -108,7 +108,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      *                   if (x > y) then it returns a value greater than zero
      */
     @Override
-    public ContractAdapter sort(AdapterSorter sorter, ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+    public ContractAdapter sort(AdapterSorter sorter, Comparator<? super Contract> comparator) {
         return new ContractAdapter(super.sort(sorter, comparator));
     }
 
@@ -120,7 +120,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      *                   if (x > y) then it returns a value greater than zero
      */
     @Override
-    public ContractAdapter sort(ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+    public ContractAdapter sort(Comparator<? super Contract> comparator) {
         return new ContractAdapter(super.sort(comparator));
     }
 
@@ -132,7 +132,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      *                   if (x > y) then it returns a value greater than zero
      */
     @Override
-    public ContractAdapter bubbleSort(ToIntBiFunction<? super Contract, ? super Contract> comparator) {
+    public ContractAdapter bubbleSort(Comparator<? super Contract> comparator) {
         return new ContractAdapter(super.bubbleSort(comparator));
     }
 
@@ -143,7 +143,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      * @return required contract
      */
     @Override
-    public ContractAdapter filter(Function<? super Contract, Boolean> predicate) {
+    public ContractAdapter filter(Predicate<? super Contract> predicate) {
         return new ContractAdapter(super.filter(predicate));
     }
 

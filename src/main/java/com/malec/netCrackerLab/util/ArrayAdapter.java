@@ -1,7 +1,8 @@
 package com.malec.netCrackerLab.util;
 
+import java.util.Comparator;
 import java.util.function.Function;
-import java.util.function.ToIntBiFunction;
+import java.util.function.Predicate;
 
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
@@ -59,14 +60,12 @@ public class ArrayAdapter<T> {
     }
 
     public int indexOf(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++)
             if (data[i].equals(element)) {
-                index = i;
-                break;
+                return i;
             }
 
-        return index;
+        return -1;
     }
 
     public boolean contains(T element) {
@@ -79,19 +78,19 @@ public class ArrayAdapter<T> {
         return (T) data[index];
     }
 
-    public ArrayAdapter<T> filter(Function<? super T, Boolean> predicate) {
+    public ArrayAdapter<T> filter(Predicate<? super T> predicate) {
         return filter.filter(this, 0, size - 1, predicate);
     }
 
-    public ArrayAdapter<T> sort(AdapterSorter sorter, ToIntBiFunction<? super T, ? super T> comparator) {
+    public ArrayAdapter<T> sort(AdapterSorter sorter, Comparator<? super T> comparator) {
         return sorter.sort(this, 0, size - 1, comparator);
     }
 
-    public ArrayAdapter<T> sort(ToIntBiFunction<? super T, ? super T> comparator) {
+    public ArrayAdapter<T> sort(Comparator<? super T> comparator) {
         return sort(sorter, comparator);
     }
 
-    public ArrayAdapter<T> bubbleSort(ToIntBiFunction<? super T, ? super T> comparator) {
+    public ArrayAdapter<T> bubbleSort(Comparator<? super T> comparator) {
         return sort(bubbleSorter, comparator);
     }
 
@@ -119,28 +118,25 @@ public class ArrayAdapter<T> {
             super.clone();
         } catch (Exception ignored) { }
 
-        return new ArrayAdapter<T>(this);
+        return new ArrayAdapter<>(this);
     }
 
     protected void incSizeBetween(int index) {
-        int count = size - index - 1;
-        Object[] tmp = new Object[size];
-        System.arraycopy(data, 0, tmp, 0, index);
-        System.arraycopy(data, index, tmp, index + 1, count);
-        data = tmp;
+        expand(1);
+        System.arraycopy(data, index, data, index + 1, size - index);
     }
 
     protected void decSizeBetween(int index) {
-        int count = size - index;
-        Object[] tmp = new Object[size];
-        System.arraycopy(data, 0, tmp, 0, index);
-        System.arraycopy(data, index + 1, tmp, index, count);
-        data = tmp;
+        System.arraycopy(data, index + 1, data, index, size - index);
     }
 
     protected void expand() {
+        expand(EXTENSION_SIZE);
+    }
+
+    protected void expand(int extensionSize) {
         Object[] tmp = data.clone();
-        data = new Object[tmp.length + EXTENSION_SIZE];
+        data = new Object[tmp.length + extensionSize];
         System.arraycopy(tmp, 0, data, 0, size);
     }
 
@@ -154,12 +150,12 @@ public class ArrayAdapter<T> {
     }
 
     protected abstract static class AdapterFilter {
-        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int endIndex, Function<? super T, Boolean> predicate) {
+        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int endIndex, Predicate<? super T> predicate) {
             ArrayAdapter<T> filtered = new ArrayAdapter<>();
 
             for (int i = startIndex; i < endIndex + 1; i++) {
                 T element = adapter.getByIndex(i);
-                if (predicate.apply(element))
+                if (predicate.test(element))
                     filtered.add(element);
             }
 
