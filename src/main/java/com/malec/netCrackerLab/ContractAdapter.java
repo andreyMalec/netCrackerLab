@@ -31,6 +31,34 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
+     * @param id id of the required contract
+     * @return required contract
+     */
+    public Contract getById(Integer id) {
+        int index = indexById(id);
+
+        if (index >= 0)
+            return (Contract) data[index];
+        else
+            return null;
+    }
+
+    /**
+     * Deletes the contract for the specified id
+     *
+     * @param id id of the required contract
+     * @return deleted element
+     */
+    public Contract removeById(Integer id) {
+        int index = indexById(id);
+
+        if (index >= 0)
+            return removeAt(index);
+        else
+            return null;
+    }
+
+    /**
      * Adds a new contract in the specified position
      *
      * @param element new contract
@@ -52,21 +80,6 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     @Override
     public Contract removeAt(int index) {
         return super.removeAt(index);
-    }
-
-    /**
-     * Deletes the contract for the specified id
-     *
-     * @param id id of the required contract
-     * @return deleted element
-     */
-    public Contract removeById(Integer id) {
-        int index = indexById(id);
-
-        if (index >= 0)
-            return removeAt(index);
-        else
-            return null;
     }
 
     /**
@@ -100,12 +113,11 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Sorts the data according to the order induced by the specified comparator
+     * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator}
      *
      * @param sorter     implementation of the {@link AdapterSorter} class that defines the sorting algorithm
-     * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
-     *                   if (x < y) then it returns a value less than zero and
-     *                   if (x > y) then it returns a value greater than zero
+     * @param comparator a comparator to be used to compare adapter elements
+     * @return the new ContractAdapter
      */
     @Override
     public ContractAdapter sort(AdapterSorter sorter, Comparator<? super Contract> comparator) {
@@ -113,11 +125,10 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Sorts the data according to the order induced by the specified comparator with QuickSort algorithm
+     * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator} with QuickSort algorithm
      *
-     * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
-     *                   if (x < y) then it returns a value less than zero and
-     *                   if (x > y) then it returns a value greater than zero
+     * @param comparator a comparator to be used to compare adapter elements
+     * @return the new ContractAdapter
      */
     @Override
     public ContractAdapter sort(Comparator<? super Contract> comparator) {
@@ -125,11 +136,10 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Sorts the data according to the order induced by the specified comparator with BubbleSort algorithm
+     * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator} with BubbleSort algorithm
      *
-     * @param comparator lambda that specified sorting method. Compare two contracts and returns the value zero if (x == y),
-     *                   if (x < y) then it returns a value less than zero and
-     *                   if (x > y) then it returns a value greater than zero
+     * @param comparator a comparator to be used to compare adapter elements
+     * @return the new ContractAdapter
      */
     @Override
     public ContractAdapter bubbleSort(Comparator<? super Contract> comparator) {
@@ -137,10 +147,10 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Search the data by the specified predicate
+     * Returns a {@link ContractAdapter} consisting of the elements of this adapter that match the given {@link Predicate}.
      *
-     * @param predicate lambda that specified searching method. Compare contract and return true if it equal to your specified value else false
-     * @return required contract
+     * @param predicate a predicate to apply to each element to determine if it should be included
+     * @return the new ContractAdapter
      */
     @Override
     public ContractAdapter filter(Predicate<? super Contract> predicate) {
@@ -148,20 +158,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * @param id position in the list
-     * @return required contract
-     */
-    public Contract getById(Integer id) {
-        int index = indexById(id);
-
-        if (index >= 0)
-            return (Contract) data[index];
-        else
-            return null;
-    }
-
-    /**
-     * @param index id of the required contract
+     * @param index position in the list
      * @return required contract
      * @throws IndexOutOfBoundsException index
      */
