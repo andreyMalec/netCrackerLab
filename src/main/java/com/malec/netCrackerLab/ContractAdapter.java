@@ -44,6 +44,18 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
+     * @param id id of the required contract
+     * @return index of the required contract in the list
+     */
+    protected int indexById(Integer id) {
+        for (int i = 0; i < size; i++)
+            if (getByIndex(i).getId().equals(id))
+                return i;
+
+        return -1;
+    }
+
+    /**
      * Deletes the contract for the specified id
      *
      * @param id id of the required contract
@@ -59,60 +71,6 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Adds a new contract in the specified position
-     *
-     * @param element new contract
-     * @param index   position in the list
-     * @throws IndexOutOfBoundsException index
-     */
-    @Override
-    public void insert(Contract element, int index) {
-        super.insert(element, index);
-    }
-
-    /**
-     * Deletes the contract for the specified position
-     *
-     * @param index position in the list
-     * @return deleted element
-     * @throws IndexOutOfBoundsException index
-     */
-    @Override
-    public Contract removeAt(int index) {
-        return super.removeAt(index);
-    }
-
-    /**
-     * @param id id of the required contract
-     * @return index of the required contract in the list
-     */
-    public int indexById(Integer id) {
-        for (int i = 0; i < size; i++)
-            if (((Contract) data[i]).getId().equals(id))
-                return i;
-
-        return -1;
-    }
-
-    /**
-     * @param contract required contract
-     * @return index of the required contract in the list
-     */
-    @Override
-    public int indexOf(Contract contract) {
-        return super.indexOf(contract);
-    }
-
-    /**
-     * @param contract required contract
-     * @return true if required contract contains in the list
-     */
-    @Override
-    public boolean contains(Contract contract) {
-        return super.contains(contract);
-    }
-
-    /**
      * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator}
      *
      * @param sorter     implementation of the {@link AdapterSorter} class that defines the sorting algorithm
@@ -120,8 +78,8 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      * @return the new ContractAdapter
      */
     @Override
-    public ContractAdapter sort(AdapterSorter sorter, Comparator<? super Contract> comparator) {
-        return new ContractAdapter(super.sort(sorter, comparator));
+    public ContractAdapter sorted(AdapterSorter sorter, Comparator<? super Contract> comparator) {
+        return new ContractAdapter(super.sorted(sorter, comparator));
     }
 
     /**
@@ -131,8 +89,8 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
      * @return the new ContractAdapter
      */
     @Override
-    public ContractAdapter sort(Comparator<? super Contract> comparator) {
-        return new ContractAdapter(super.sort(comparator));
+    public ContractAdapter sorted(Comparator<? super Contract> comparator) {
+        return new ContractAdapter(super.sorted(comparator));
     }
 
     /**
@@ -155,14 +113,5 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     @Override
     public ContractAdapter filter(Predicate<? super Contract> predicate) {
         return new ContractAdapter(super.filter(predicate));
-    }
-
-    /**
-     * @param index position in the list
-     * @return required contract
-     * @throws IndexOutOfBoundsException index
-     */
-    public Contract getByIndex(int index) {
-        return super.getByIndex(index);
     }
 }

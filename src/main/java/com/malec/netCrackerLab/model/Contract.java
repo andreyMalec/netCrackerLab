@@ -1,6 +1,6 @@
 package com.malec.netCrackerLab.model;
 
-public abstract class Contract {
+public class Contract {
     private Integer id;
     private Long startDate, endDate;
     private Client client;

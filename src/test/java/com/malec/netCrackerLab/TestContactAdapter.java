@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 public class TestContactAdapter {
@@ -25,7 +26,7 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayAdapter<Integer> newAdapter = adapter.sort(Comparator.comparingInt(Contract::getId))
+        ArrayAdapter<Integer> newAdapter = adapter.sorted(Comparator.comparingInt(Contract::getId))
                 .filter(it -> ((InternetContract) it).getSpeedLimit() == 4).map(Contract::getId);
 
         assertEquals(15, (int) newAdapter.getByIndex(0));
@@ -73,11 +74,20 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter.sort(Comparator.comparingLong(Contract::getStartDate));
+        ContractAdapter sorted = adapter.sorted(Comparator.comparingLong(Contract::getStartDate));
         assertEquals(15, (int) sorted.getByIndex(0).getId());
         assertEquals(42, (int) sorted.getByIndex(1).getId());
         assertEquals(0, (int) sorted.getByIndex(2).getId());
         assertEquals(2, (int) sorted.getByIndex(3).getId());
+    }
+
+    @Test
+    public void testConstructor() {
+        ContractAdapter adapter = new ContractAdapter();
+        fill(adapter);
+
+        ContractAdapter anotherAdapter = new ContractAdapter(adapter);
+        assertEquals(0, (int) anotherAdapter.getByIndex(0).getId());
     }
 
     @Test
@@ -98,6 +108,11 @@ public class TestContactAdapter {
         Contract c = adapter.getByIndex(1);
 
         assertEquals(1, (int) c.getId());
+
+        IndexOutOfBoundsException failure = assertThrows(IndexOutOfBoundsException.class,
+                                                         () -> adapter.getByIndex(10)
+        );
+        assertEquals("Index: 10, Size: 4", failure.getMessage());
     }
 
     @Test
@@ -163,11 +178,17 @@ public class TestContactAdapter {
     public void testRemoveById() {
         ContractAdapter adapter = new ContractAdapter();
         fill(adapter);
-        adapter.removeById(1);
+
+        Contract removed = adapter.removeById(1);
+        assertNotNull(removed);
         assertNull(adapter.getById(1));
         assertNotNull(adapter.getByIndex(2));
-        adapter.removeById(2);
-        assertNull(adapter.getById(2));
+
+        Contract removed2 = adapter.removeById(8);
+        assertNull(removed2);
+        assertNull(adapter.getById(8));
+
+        assertEquals(3, adapter.getSize());
     }
 
     private void fill(ContractAdapter adapter) {

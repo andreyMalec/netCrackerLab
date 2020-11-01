@@ -7,10 +7,8 @@ import java.util.function.Predicate;
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
 
-    protected static final AdapterFilter filter = new AdapterFilter() {};
-
-    protected static final AdapterSorter sorter = new QuickSorter();
-    protected static final AdapterSorter bubbleSorter = new BubbleSorter();
+    protected AdapterFilter filter;
+    protected AdapterSorter sorter, bubbleSorter;
 
     protected int size;
     protected Object[] data;
@@ -23,6 +21,9 @@ public class ArrayAdapter<T> {
     public ArrayAdapter(ArrayAdapter<T> anotherAdapter) {
         this.size = anotherAdapter.size;
         this.data = anotherAdapter.data.clone();
+        this.filter = anotherAdapter.filter;
+        this.sorter = anotherAdapter.sorter;
+        this.bubbleSorter = anotherAdapter.bubbleSorter;
     }
 
     public int getSize() {
@@ -34,6 +35,20 @@ public class ArrayAdapter<T> {
             expand();
 
         data[size++] = element;
+    }
+
+    protected boolean isFull() {
+        return size >= data.length;
+    }
+
+    protected void expand() {
+        expand(EXTENSION_SIZE);
+    }
+
+    protected void expand(int extensionSize) {
+        Object[] tmp = data.clone();
+        data = new Object[tmp.length + extensionSize];
+        System.arraycopy(tmp, 0, data, 0, size);
     }
 
     public void insert(T element, int index) {
@@ -49,21 +64,34 @@ public class ArrayAdapter<T> {
         data[index] = element;
     }
 
+    protected void checkBounds(int index) {
+        if (index >= size || index < 0)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    }
+
+    protected void incSizeBetween(int index) {
+        expand(1);
+        System.arraycopy(data, index, data, index + 1, size - index);
+    }
+
     public T removeAt(int index) {
         checkBounds(index);
 
         size--;
-        T element = (T) data[index];
+        Object element = data[index];
         decSizeBetween(index);
 
-        return element;
+        return (T) element;
+    }
+
+    protected void decSizeBetween(int index) {
+        System.arraycopy(data, index + 1, data, index, size - index);
     }
 
     public int indexOf(T element) {
         for (int i = 0; i < size; i++)
-            if (data[i].equals(element)) {
+            if (data[i].equals(element))
                 return i;
-            }
 
         return -1;
     }
@@ -79,26 +107,44 @@ public class ArrayAdapter<T> {
     }
 
     public ArrayAdapter<T> filter(Predicate<? super T> predicate) {
-        return filter.filter(this, 0, size - 1, predicate);
+        initFilter();
+        return filter.filter(this, 0, size, predicate);
     }
 
-    public ArrayAdapter<T> sort(AdapterSorter sorter, Comparator<? super T> comparator) {
-        return sorter.sort(this, 0, size - 1, comparator);
+    protected void initFilter() {
+        if (filter == null)
+            filter = AdapterFilter.instance();
     }
 
-    public ArrayAdapter<T> sort(Comparator<? super T> comparator) {
-        return sort(sorter, comparator);
+    public ArrayAdapter<T> sorted(AdapterSorter sorter, Comparator<? super T> comparator) {
+        return sorter.sorted(this, 0, size, comparator);
+    }
+
+    public ArrayAdapter<T> sorted(Comparator<? super T> comparator) {
+        initSorter();
+        return sorted(sorter, comparator);
+    }
+
+    protected void initSorter() {
+        if (sorter == null)
+            sorter = AdapterSorterFactory.getSorter();
     }
 
     public ArrayAdapter<T> bubbleSort(Comparator<? super T> comparator) {
-        return sort(bubbleSorter, comparator);
+        initBubbleSorter();
+        return sorted(bubbleSorter, comparator);
+    }
+
+    protected void initBubbleSorter() {
+        if (bubbleSorter == null)
+            bubbleSorter = AdapterSorterFactory.getBubbleSorter();
     }
 
     public <E> ArrayAdapter<E> map(Function<? super T, E> mapper) {
         ArrayAdapter<E> mapped = new ArrayAdapter<>();
 
         for (int i = 0; i < size; i++)
-            mapped.add(mapper.apply((T) data[i]));
+            mapped.add(mapper.apply(getByIndex(i)));
 
         return mapped;
     }
@@ -121,39 +167,15 @@ public class ArrayAdapter<T> {
         return new ArrayAdapter<>(this);
     }
 
-    protected void incSizeBetween(int index) {
-        expand(1);
-        System.arraycopy(data, index, data, index + 1, size - index);
-    }
-
-    protected void decSizeBetween(int index) {
-        System.arraycopy(data, index + 1, data, index, size - index);
-    }
-
-    protected void expand() {
-        expand(EXTENSION_SIZE);
-    }
-
-    protected void expand(int extensionSize) {
-        Object[] tmp = data.clone();
-        data = new Object[tmp.length + extensionSize];
-        System.arraycopy(tmp, 0, data, 0, size);
-    }
-
-    protected void checkBounds(int index) {
-        if (index >= size || index < 0)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-    }
-
-    protected boolean isFull() {
-        return size >= data.length;
-    }
-
     protected abstract static class AdapterFilter {
-        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int endIndex, Predicate<? super T> predicate) {
+        public static AdapterFilter instance() {
+            return new AdapterFilter() {};
+        }
+
+        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int count, Predicate<? super T> predicate) {
             ArrayAdapter<T> filtered = new ArrayAdapter<>();
 
-            for (int i = startIndex; i < endIndex + 1; i++) {
+            for (int i = startIndex; i < count; i++) {
                 T element = adapter.getByIndex(i);
                 if (predicate.test(element))
                     filtered.add(element);
