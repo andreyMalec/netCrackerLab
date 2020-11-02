@@ -83,28 +83,6 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     }
 
     /**
-     * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator} with QuickSort algorithm
-     *
-     * @param comparator a comparator to be used to compare adapter elements
-     * @return the new ContractAdapter
-     */
-    @Override
-    public ContractAdapter sorted(Comparator<? super Contract> comparator) {
-        return new ContractAdapter(super.sorted(comparator));
-    }
-
-    /**
-     * Returns a {@link ContractAdapter} consisting of the elements of this adapter, sorted according to the provided {@link Comparator} with BubbleSort algorithm
-     *
-     * @param comparator a comparator to be used to compare adapter elements
-     * @return the new ContractAdapter
-     */
-    @Override
-    public ContractAdapter bubbleSort(Comparator<? super Contract> comparator) {
-        return new ContractAdapter(super.bubbleSort(comparator));
-    }
-
-    /**
      * Returns a {@link ContractAdapter} consisting of the elements of this adapter that match the given {@link Predicate}.
      *
      * @param predicate a predicate to apply to each element to determine if it should be included
@@ -113,5 +91,14 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     @Override
     public ContractAdapter filter(Predicate<? super Contract> predicate) {
         return new ContractAdapter(super.filter(predicate));
+    }
+
+    @Override
+    public ContractAdapter clone() {
+        try {
+            super.clone();
+        } catch (Exception ignored) { }
+
+        return new ContractAdapter(this);
     }
 }

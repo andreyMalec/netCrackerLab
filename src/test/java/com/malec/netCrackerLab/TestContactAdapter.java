@@ -4,6 +4,7 @@ import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
+import com.malec.netCrackerLab.util.AdapterSorterFactory;
 import com.malec.netCrackerLab.util.ArrayAdapter;
 
 import org.junit.Test;
@@ -11,12 +12,8 @@ import org.junit.Test;
 import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
@@ -26,7 +23,8 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayAdapter<Integer> newAdapter = adapter.sorted(Comparator.comparingInt(Contract::getId))
+        ArrayAdapter<Integer> newAdapter = adapter
+                .sorted(AdapterSorterFactory.getSorter(), Comparator.comparingInt(Contract::getId))
                 .filter(it -> ((InternetContract) it).getSpeedLimit() == 4).map(Contract::getId);
 
         assertEquals(15, (int) newAdapter.getByIndex(0));
@@ -62,7 +60,9 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter.bubbleSort(Comparator.comparingInt(Contract::getId));
+        ContractAdapter sorted = adapter.sorted(AdapterSorterFactory.getBubbleSorter(),
+                Comparator.comparingInt(Contract::getId)
+        );
         assertEquals(0, (int) sorted.getByIndex(0).getId());
         assertEquals(2, (int) sorted.getByIndex(1).getId());
         assertEquals(15, (int) sorted.getByIndex(2).getId());
@@ -74,20 +74,13 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter.sorted(Comparator.comparingLong(Contract::getStartDate));
+        ContractAdapter sorted = adapter.sorted(AdapterSorterFactory.getSorter(),
+                Comparator.comparingLong(Contract::getStartDate)
+        );
         assertEquals(15, (int) sorted.getByIndex(0).getId());
         assertEquals(42, (int) sorted.getByIndex(1).getId());
         assertEquals(0, (int) sorted.getByIndex(2).getId());
         assertEquals(2, (int) sorted.getByIndex(3).getId());
-    }
-
-    @Test
-    public void testConstructor() {
-        ContractAdapter adapter = new ContractAdapter();
-        fill(adapter);
-
-        ContractAdapter anotherAdapter = new ContractAdapter(adapter);
-        assertEquals(0, (int) anotherAdapter.getByIndex(0).getId());
     }
 
     @Test
@@ -98,80 +91,7 @@ public class TestContactAdapter {
         Contract c = adapter.getById(0);
 
         assertEquals(0, (int) c.getId());
-    }
-
-    @Test
-    public void testGetByIndex() {
-        ContractAdapter adapter = new ContractAdapter();
-        fill(adapter);
-
-        Contract c = adapter.getByIndex(1);
-
-        assertEquals(1, (int) c.getId());
-
-        IndexOutOfBoundsException failure = assertThrows(IndexOutOfBoundsException.class,
-                                                         () -> adapter.getByIndex(10)
-        );
-        assertEquals("Index: 10, Size: 4", failure.getMessage());
-    }
-
-    @Test
-    public void testRemoveAt() {
-        ContractAdapter adapter = new ContractAdapter();
-        fill(adapter);
-
-        adapter.removeAt(2);
-        Contract c = adapter.getById(2);
-        assertNull(c);
-
-        adapter.removeAt(0);
-        Contract c2 = adapter.getById(0);
-        assertNull(c2);
-
-        adapter.removeAt(1);
-        Contract c3 = adapter.getById(3);
-        assertNull(c3);
-
-        adapter.removeAt(0);
-        Contract c4 = adapter.getById(1);
-        assertNull(c4);
-    }
-
-    @Test
-    public void testInsert() {
-        ContractAdapter adapter = new ContractAdapter();
-
-        adapter.insert(new InternetContract(0, 0L, 0L, client, 10), 0);
-        Contract c = adapter.getByIndex(0);
-        assertEquals(0, (int) c.getId());
-
-        adapter.insert(new InternetContract(8, 8L, 8L, client, 80), 0);
-        Contract c2 = adapter.getByIndex(0);
-        assertEquals(8, (int) c2.getId());
-
-        adapter.insert(new InternetContract(9, 9L, 9L, client, 90), 2);
-        Contract c3 = adapter.getByIndex(0);
-        assertEquals(8, (int) c3.getId());
-
-        adapter.insert(new InternetContract(7, 7L, 7L, client, 70), 2);
-        Contract c4 = adapter.getByIndex(2);
-        assertEquals(7, (int) c4.getId());
-    }
-
-    @Test
-    public void testContains() {
-        ContractAdapter adapter = new ContractAdapter();
-        Contract contact = new InternetContract(9, 9L, 9L, client, 90);
-        Contract contact2 = new InternetContract(1, 1L, 1L, client, 10);
-        adapter.add(contact);
-        assertTrue(adapter.contains(contact));
-        assertFalse(adapter.contains(contact2));
-    }
-
-    @Test
-    public void testClone() {
-        ContractAdapter adapter = new ContractAdapter();
-        assertNotEquals(adapter, adapter.clone());
+        assertNull(adapter.getById(10));
     }
 
     @Test

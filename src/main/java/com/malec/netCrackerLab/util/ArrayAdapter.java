@@ -7,9 +7,6 @@ import java.util.function.Predicate;
 public class ArrayAdapter<T> {
     protected static final int EXTENSION_SIZE = 10;
 
-    protected AdapterFilter filter;
-    protected AdapterSorter sorter, bubbleSorter;
-
     protected int size;
     protected Object[] data;
 
@@ -21,9 +18,6 @@ public class ArrayAdapter<T> {
     public ArrayAdapter(ArrayAdapter<T> anotherAdapter) {
         this.size = anotherAdapter.size;
         this.data = anotherAdapter.data.clone();
-        this.filter = anotherAdapter.filter;
-        this.sorter = anotherAdapter.sorter;
-        this.bubbleSorter = anotherAdapter.bubbleSorter;
     }
 
     public int getSize() {
@@ -80,6 +74,7 @@ public class ArrayAdapter<T> {
         size--;
         Object element = data[index];
         decSizeBetween(index);
+        data[size] = null;
 
         return (T) element;
     }
@@ -107,37 +102,19 @@ public class ArrayAdapter<T> {
     }
 
     public ArrayAdapter<T> filter(Predicate<? super T> predicate) {
-        initFilter();
-        return filter.filter(this, 0, size, predicate);
-    }
+        ArrayAdapter<T> filtered = new ArrayAdapter<>();
 
-    protected void initFilter() {
-        if (filter == null)
-            filter = AdapterFilter.instance();
+        for (int i = 0; i < size; i++) {
+            T element = getByIndex(i);
+            if (predicate.test(element))
+                filtered.add(element);
+        }
+
+        return filtered;
     }
 
     public ArrayAdapter<T> sorted(AdapterSorter sorter, Comparator<? super T> comparator) {
         return sorter.sorted(this, 0, size, comparator);
-    }
-
-    public ArrayAdapter<T> sorted(Comparator<? super T> comparator) {
-        initSorter();
-        return sorted(sorter, comparator);
-    }
-
-    protected void initSorter() {
-        if (sorter == null)
-            sorter = AdapterSorterFactory.getSorter();
-    }
-
-    public ArrayAdapter<T> bubbleSort(Comparator<? super T> comparator) {
-        initBubbleSorter();
-        return sorted(bubbleSorter, comparator);
-    }
-
-    protected void initBubbleSorter() {
-        if (bubbleSorter == null)
-            bubbleSorter = AdapterSorterFactory.getBubbleSorter();
     }
 
     public <E> ArrayAdapter<E> map(Function<? super T, E> mapper) {
@@ -165,23 +142,5 @@ public class ArrayAdapter<T> {
         } catch (Exception ignored) { }
 
         return new ArrayAdapter<>(this);
-    }
-
-    protected abstract static class AdapterFilter {
-        public static AdapterFilter instance() {
-            return new AdapterFilter() {};
-        }
-
-        <T> ArrayAdapter<T> filter(ArrayAdapter<T> adapter, int startIndex, int count, Predicate<? super T> predicate) {
-            ArrayAdapter<T> filtered = new ArrayAdapter<>();
-
-            for (int i = startIndex; i < count; i++) {
-                T element = adapter.getByIndex(i);
-                if (predicate.test(element))
-                    filtered.add(element);
-            }
-
-            return filtered;
-        }
     }
 }

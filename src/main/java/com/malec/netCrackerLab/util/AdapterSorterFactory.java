@@ -1,11 +1,21 @@
 package com.malec.netCrackerLab.util;
 
 public class AdapterSorterFactory {
+    protected static AdapterSorter sorter, bubbleSorter;
+
+    private AdapterSorterFactory() {}
+
     public static AdapterSorter getSorter() {
-        return new QuickSorter();
+        if (sorter == null)
+            sorter = new QuickSorter();
+
+        return sorter;
     }
 
     public static AdapterSorter getBubbleSorter() {
-        return new BubbleSorter();
+        if (bubbleSorter == null)
+            bubbleSorter = new BubbleSorter();
+
+        return bubbleSorter;
     }
 }
