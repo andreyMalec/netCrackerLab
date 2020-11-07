@@ -3,7 +3,7 @@ package com.malec.netCrackerLab.model;
 public class TVContract extends Contract {
     private TVPackage tvPackage;
 
-    public TVContract(Integer id, Long startDate, Long endDate, Client client, TVPackage tvPackage) {
+    public TVContract(TVPackage tvPackage, Integer id, Long startDate, Long endDate, Client client) {
         super(id, startDate, endDate, client);
 
         this.tvPackage = tvPackage;

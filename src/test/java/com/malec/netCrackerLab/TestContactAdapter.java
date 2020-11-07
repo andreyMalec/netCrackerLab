@@ -112,16 +112,16 @@ public class TestContactAdapter {
     }
 
     private void fill(ContractAdapter adapter) {
-        adapter.add(new InternetContract(0, 0L, 0L, client, 10));
-        adapter.add(new InternetContract(1, 1L, 1L, client, 11));
-        adapter.add(new InternetContract(2, 2L, 2L, client, 12));
-        adapter.add(new InternetContract(3, 3L, 3L, client, 13));
+        adapter.add(new InternetContract(10, 0, 0L, 0L, client));
+        adapter.add(new InternetContract(11, 1, 1L, 1L, client));
+        adapter.add(new InternetContract(12, 2, 2L, 2L, client));
+        adapter.add(new InternetContract(13, 3, 3L, 3L, client));
     }
 
     private void fillRandom(ContractAdapter adapter) {
-        adapter.add(new InternetContract(2, 22L, 23L, client, 12));
-        adapter.add(new InternetContract(42, 4L, 4L, client, 4));
-        adapter.add(new InternetContract(0, 9L, 6L, client, 3));
-        adapter.add(new InternetContract(15, 2L, 3L, client, 4));
+        adapter.add(new InternetContract(12, 2, 22L, 23L, client));
+        adapter.add(new InternetContract(4, 42, 4L, 4L, client));
+        adapter.add(new InternetContract(3, 0, 9L, 6L, client));
+        adapter.add(new InternetContract(4, 15, 2L, 3L, client));
     }
 }
