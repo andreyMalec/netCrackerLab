@@ -1,7 +1,4 @@
-package com.malec.netCrackerLab;
-
-import com.malec.netCrackerLab.util.AdapterSorterFactory;
-import com.malec.netCrackerLab.util.ArrayAdapter;
+package com.malec.netCrackerLab.util;
 
 import org.junit.Test;
 
@@ -26,7 +23,7 @@ public class TestArrayAdapter {
 
         assertEquals(4, (int) newAdapter.getByIndex(0));
         assertEquals(0, (int) newAdapter.getByIndex(1));
-        assertEquals(2, newAdapter.getSize());
+        assertEquals(2, newAdapter.size());
     }
 
     @Test
@@ -50,7 +47,7 @@ public class TestArrayAdapter {
         assertEquals("testCase", filtered.getByIndex(0));
         assertEquals("abc", filtered.getByIndex(1));
         assertEquals("random", filtered.getByIndex(2));
-        assertEquals(3, filtered.getSize());
+        assertEquals(3, filtered.size());
     }
 
     @Test

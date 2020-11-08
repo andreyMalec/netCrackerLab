@@ -1,0 +1,11 @@
+internet, 0,  123,    456,    0, name,    0,    male,   1234, 56789,  111
+mobile,   1,  123123, 456456, 0, name,    0,    MALE,   1234, 56789,  21;22;23
+internet, 2,  321,    654,    1, surname, 147,  female, 7889, 654123, 333
+tv,       3,  321321, 654654, 2, vasya,   2020, male,   0,    0,      streAMING
+tv,       4,  321,    654,    3, petya,   2077, male,   0,    0,      MOVIES
+internet, 5,  321,    654,    3, petya,   2077, male,   0,    0,      333
+mobile,   6,  321,    654,    3, petya,   2077, male,   0,    0,      50;200;50
+mobile,   7,  456789, 147894, 4, anna,    2000, female, 0,    0,      150;300;40
+internet, 8,  178040, 102450, 5, lera,    2000, female, 0,    0,      222
+mobile,   9,  178040, 102450, 5, lera,    2000, female, 0,    0,      40;40;40
+tv,       10, 178040, 102450, 5, lera,    2000, female, 0,    0,      SPORT

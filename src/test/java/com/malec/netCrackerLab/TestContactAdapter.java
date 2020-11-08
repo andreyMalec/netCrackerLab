@@ -1,14 +1,17 @@
 package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
+import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.util.AdapterSorterFactory;
 import com.malec.netCrackerLab.util.ArrayAdapter;
 
 import org.junit.Test;
 
+import java.net.URISyntaxException;
 import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
@@ -17,6 +20,21 @@ import static org.junit.Assert.assertNull;
 
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
+
+    @Test
+    public void testFromFile() throws URISyntaxException {
+        ContractParser parser = new ContractParser();
+        ContractAdapter adapter = parser.parse(Reader.getFileFromResource("tableOfContents.csv"));
+
+        for (int i = 0; i < adapter.size(); i++)
+            assertNotNull(adapter.getByIndex(i));
+
+        assertEquals(InternetContract.class, adapter.getByIndex(0).getClass());
+        assertEquals(111, (int) ((InternetContract) adapter.getByIndex(0)).getSpeedLimit());
+
+        assertEquals(MobileContract.class, adapter.getByIndex(1).getClass());
+        assertEquals(23, (int) ((MobileContract) adapter.getByIndex(1)).getGb());
+    }
 
     @Test
     public void testSortFilterMapChain() {
@@ -108,7 +126,7 @@ public class TestContactAdapter {
         assertNull(removed2);
         assertNull(adapter.getById(8));
 
-        assertEquals(3, adapter.getSize());
+        assertEquals(3, adapter.size());
     }
 
     private void fill(ContractAdapter adapter) {

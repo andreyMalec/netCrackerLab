@@ -20,7 +20,7 @@ public class ArrayAdapter<T> {
         this.data = anotherAdapter.data.clone();
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 

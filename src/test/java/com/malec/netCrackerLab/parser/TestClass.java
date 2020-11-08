@@ -1,4 +1,4 @@
-package com.malec.netCrackerLab;
+package com.malec.netCrackerLab.parser;
 
 public class TestClass {
     public int testInt;

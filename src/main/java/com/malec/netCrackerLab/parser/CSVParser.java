@@ -1,4 +1,6 @@
-package com.malec.netCrackerLab.reflect;
+package com.malec.netCrackerLab.parser;
+
+import com.malec.netCrackerLab.util.Array;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -6,27 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CSVParser {
-    public static <T> T from(String source, Class<T> jClass) {
-        try {
-            return CSVClassConstructor.from(source, jClass);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
-    public static <T> String toCSV(T object) {
-        try {
-            return CSVClassDeconstructor.toCSV(object);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
+public class CSVParser implements ClassParser {
     private static boolean isBaseType(Class<?> type) {
         return type.isAssignableFrom(String.class) || type.isEnum() || type
                 .isPrimitive() || isWrappedType(type);
@@ -37,6 +19,26 @@ public class CSVParser {
                 .isAssignableFrom(Float.class) || type.isAssignableFrom(Boolean.class) || type
                 .isAssignableFrom(Long.class) || type.isAssignableFrom(Character.class) || type
                 .isAssignableFrom(Byte.class) || type.isAssignableFrom(Short.class);
+    }
+
+    @Override
+    public <T> T from(String source, Class<T> jClass) {
+        try {
+            return CSVClassConstructor.from(source, jClass);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public <T> String to(T object) {
+        try {
+            return CSVClassDeconstructor.toCSV(object);
+        } catch (IllegalAccessException ignoreBecauseWeMakeFieldsAccessible) {
+            ignoreBecauseWeMakeFieldsAccessible.printStackTrace();
+
+            return null;
+        }
     }
 
     private static class CSVClassConstructor {
@@ -132,7 +134,7 @@ public class CSVParser {
         public static <T> String toCSV(T object) throws IllegalAccessException {
             List<Object> values = getAllValues(object, object.getClass());
 
-            return join(values);
+            return Array.join(values, ",");
         }
 
         private static <T> List<Object> getAllValues(T object, Class<?> jClass) throws IllegalAccessException {
@@ -169,17 +171,6 @@ public class CSVParser {
                 values[i] = field.get(object);
             }
             return values;
-        }
-
-        private static String join(List<Object> objects) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < objects.size(); i++) {
-                sb.append(objects.get(i));
-                if (i != objects.size() - 1)
-                    sb.append(",");
-            }
-
-            return sb.toString();
         }
     }
 }
