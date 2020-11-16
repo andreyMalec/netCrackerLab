@@ -31,6 +31,6 @@
         <junit.version>4.13.1</junit.version>
     </properties>
 
-    <version>0.16</version>
+    <version>0.17</version>
 
 </project>

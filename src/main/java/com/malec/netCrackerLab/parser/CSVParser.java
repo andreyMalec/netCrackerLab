@@ -169,9 +169,17 @@ public class CSVParser implements ClassParser {
 
         private static <T> Object[] getValues(T object, Class<?> jClass) throws IllegalAccessException {
             Field[] fields = jClass.getDeclaredFields();
-            Object[] values = new Object[fields.length];
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
+            Field[] fieldsNotAnnotated = new Field[fields.length];
+            int length = 0;
+            for (Field value : fields)
+                if (value.getAnnotation(Ignore.class) == null)
+                    fieldsNotAnnotated[length++] = value;
+            Field[] fieldsNotAnnotatedTrim = new Field[length];
+            System.arraycopy(fieldsNotAnnotated, 0, fieldsNotAnnotatedTrim, 0, length);
+
+            Object[] values = new Object[length];
+            for (int i = 0; i < length; i++) {
+                Field field = fieldsNotAnnotatedTrim[i];
                 field.setAccessible(true);
                 values[i] = field.get(object);
             }

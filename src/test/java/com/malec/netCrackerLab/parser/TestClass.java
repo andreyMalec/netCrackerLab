@@ -2,6 +2,8 @@ package com.malec.netCrackerLab.parser;
 
 public class TestClass {
     public int testInt;
+    @Ignore
+    public int ignore;
     public String testString;
     public TestClass2 testClass2;
     public TestClass3 testClass3;
