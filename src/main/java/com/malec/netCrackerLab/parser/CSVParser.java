@@ -70,13 +70,18 @@ public class CSVParser implements ClassParser {
         }
 
         private static Class<?>[] getFieldsTypes(Class<?> jClass) {
-            Field[] fields = jClass.getDeclaredFields();
-            Class<?>[] types = new Class<?>[fields.length];
+            Constructor<?>[] constructors = jClass.getDeclaredConstructors();
+            int maxParamsCount = 0;
+            Constructor<?> maxParamsCountConstructor = constructors[0];
+            for (Constructor<?> constructor : constructors) {
+                int paramsCount = constructor.getParameterCount();
+                if (maxParamsCount < paramsCount) {
+                    maxParamsCount = paramsCount;
+                    maxParamsCountConstructor = constructor;
+                }
+            }
 
-            for (int i = 0; i < fields.length; i++)
-                types[i] = fields[i].getType();
-
-            return types;
+            return maxParamsCountConstructor.getParameterTypes();
         }
 
         private static List<Object> makeParams(Class<?>[] types) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
