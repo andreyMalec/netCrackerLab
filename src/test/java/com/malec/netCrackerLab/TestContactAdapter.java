@@ -8,16 +8,16 @@ import com.malec.netCrackerLab.model.InternetContract;
 import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.util.AdapterSorterFactory;
 import com.malec.netCrackerLab.util.ArrayAdapter;
+import com.malec.netCrackerLab.util.ConsoleLogger;
 import com.malec.netCrackerLab.validator.Condition;
 import com.malec.netCrackerLab.validator.Conditions;
 import com.malec.netCrackerLab.validator.Validator;
+import com.malec.netCrackerLab.validator.ValidatorBuilder;
 
 import org.junit.Test;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,18 +30,20 @@ public class TestContactAdapter {
     public void testValidate() throws URISyntaxException {
         ContractParser parser = new ContractParser();
 
-        List<Condition<Contract>> conditions = new ArrayList<>();
-        conditions.add(new Condition<>(2, Contract::getId,
+        ValidatorBuilder<Contract> builder = new ValidatorBuilder<>();
+        builder.add(new Condition<>(2, Contract::getId,
                 ((expected, actual) -> actual % expected == 0)
         ));
-        conditions.add(new Condition<>("lera", contract -> contract.getClient().getFullName()));
-        conditions.add(new Condition<>(9, Conditions.GREATER_THAN_OR_EQUALS, Contract::getId,
+        builder.add(new Condition<>("lera", contract -> contract.getClient().getFullName()));
+        builder.add(new Condition<>(9, Conditions.GREATER_THAN_OR_EQUALS, Contract::getId,
                 (expected, actual) -> expected >= actual
         ));
-        Validator<Contract> validator = new Validator<>(conditions);
+        Validator<Contract> validator = builder.build();
 
         ContractAdapter adapter = parser
-                .parse(Reader.getFileFromResource("tableOfContents.csv"), validator);
+                .parse(Reader.getFileFromResource("tableOfContents.csv"), validator,
+                        new ConsoleLogger()
+                );
 
         assertNull(adapter.getById(0));
         assertNull(adapter.getById(1));

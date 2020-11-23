@@ -7,13 +7,17 @@ import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.model.TVContract;
 import com.malec.netCrackerLab.parser.CSVParser;
 import com.malec.netCrackerLab.util.Array;
+import com.malec.netCrackerLab.util.Logger;
 import com.malec.netCrackerLab.validator.ValidationResult;
 import com.malec.netCrackerLab.validator.Validator;
 
 import java.io.File;
 
+import static com.malec.netCrackerLab.util.Ext.append;
+import static com.malec.netCrackerLab.util.Ext.newLine;
+
 public class ContractParser {
-    public ContractAdapter parse(File file, Validator<Contract> validator) {
+    public ContractAdapter parse(File file, Validator<Contract> validator, Logger logger) {
         ContractAdapter adapter = new ContractAdapter();
         CSVReader reader = new CSVReader(file);
         CSVParser parser = new CSVParser();
@@ -33,26 +37,16 @@ public class ContractParser {
             if (validator != null) {
                 int errorCount = 0;
                 for (ValidationResult result : validator.validate(contract)) {
-                    if (!result.isValid())
+                    if (!result.isValid()) {
                         errorCount++;
-                    System.out.println(result.getMessage());
+                        if (logger != null)
+                            logger.error(result.getMessage());
+                    } else if (logger != null)
+                        logger.note(result.getMessage());
                 }
-                System.out.print("Validation finished with ");
-                System.out.print(errorCount);
-                System.out.print(" error");
-                if (errorCount != 1)
-                    System.out.print("s");
-                if (errorCount > 0) {
-                    System.out.println();
-                    System.out.print("Current contract [");
-                    System.out.print(contract);
-                    System.out.print("] will be ignored");
-                    System.out.println();
-                } else {
+                logResult(logger, errorCount, contract.toString());
+                if (errorCount == 0)
                     adapter.add(contract);
-                    System.out.println();
-                }
-                System.out.println();
             } else
                 adapter.add(contract);
         }
@@ -60,8 +54,33 @@ public class ContractParser {
         return adapter;
     }
 
+    private void logResult(Logger logger, int errorCount, String currentContract) {
+        if (logger == null)
+            return;
+
+        StringBuilder sb = new StringBuilder();
+        append(sb, "Validation finished with ", errorCount, " error");
+        if (errorCount != 1)
+            append(sb, "s");
+        if (errorCount > 0)
+            append(sb, newLine(), "Current contract [", currentContract, "] will be ignored",
+                    newLine()
+            );
+        else
+            append(sb, newLine());
+        logger.note(sb.toString());
+    }
+
+    public ContractAdapter parse(File file, Logger logger) {
+        return parse(file, null, logger);
+    }
+
+    public ContractAdapter parse(File file, Validator<Contract> validator) {
+        return parse(file, validator, null);
+    }
+
     public ContractAdapter parse(File file) {
-        return parse(file, null);
+        return parse(file, null, null);
     }
 
     private Class<? extends Contract> parseClass(String s) {

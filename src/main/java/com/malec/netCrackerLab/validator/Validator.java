@@ -3,6 +3,8 @@ package com.malec.netCrackerLab.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.malec.netCrackerLab.util.Ext.append;
+
 public class Validator<T> {
     private final List<Condition<T>> conditions;
 
@@ -49,10 +51,5 @@ public class Validator<T> {
                 sb.append("not ");
             append(sb, type.value(), " actual value [", actual, "]");
         }
-    }
-
-    private void append(StringBuilder sb, Object... objects) {
-        for (Object o : objects)
-            sb.append(o);
     }
 }
