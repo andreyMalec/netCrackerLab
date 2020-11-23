@@ -27,4 +27,9 @@ public class Contract {
     public Client getClient() {
         return client;
     }
+
+    @Override
+    public String toString() {
+        return "Contract{" + "id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", client=" + client + '}';
+    }
 }

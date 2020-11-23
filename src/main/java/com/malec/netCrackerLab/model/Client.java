@@ -45,4 +45,9 @@ public class Client {
     public Integer getPassportNumber() {
         return passportNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" + "id=" + id + ", fullName='" + fullName + '\'' + ", birthday=" + birthday + ", sex=" + sex + ", passportSeries=" + passportSeries + ", passportNumber=" + passportNumber + '}';
+    }
 }

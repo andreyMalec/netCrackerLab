@@ -8,11 +8,16 @@ import com.malec.netCrackerLab.model.InternetContract;
 import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.util.AdapterSorterFactory;
 import com.malec.netCrackerLab.util.ArrayAdapter;
+import com.malec.netCrackerLab.validator.Condition;
+import com.malec.netCrackerLab.validator.Conditions;
+import com.malec.netCrackerLab.validator.Validator;
 
 import org.junit.Test;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,6 +25,32 @@ import static org.junit.Assert.assertNull;
 
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
+
+    @Test
+    public void testValidate() throws URISyntaxException {
+        ContractParser parser = new ContractParser();
+
+        List<Condition<Contract>> conditions = new ArrayList<>();
+        conditions.add(new Condition<>(2, Contract::getId,
+                ((expected, actual) -> actual % expected == 0)
+        ));
+        conditions.add(new Condition<>("lera", contract -> contract.getClient().getFullName()));
+        conditions.add(new Condition<>(9, Conditions.GREATER_THAN_OR_EQUALS, Contract::getId,
+                (expected, actual) -> expected >= actual
+        ));
+        Validator<Contract> validator = new Validator<>(conditions);
+
+        ContractAdapter adapter = parser
+                .parse(Reader.getFileFromResource("tableOfContents.csv"), validator);
+
+        assertNull(adapter.getById(0));
+        assertNull(adapter.getById(1));
+        assertNull(adapter.getById(2));
+        assertNull(adapter.getById(3));
+        assertNull(adapter.getById(4));
+        assertNotNull(adapter.getById(8));
+        assertNull(adapter.getById(10));
+    }
 
     @Test
     public void testFromFile() throws URISyntaxException {
