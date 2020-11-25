@@ -1,22 +1,22 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.io.Reader;
+import com.malec.netCrackerLab.di.AppModule;
+import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
 import com.malec.netCrackerLab.model.InternetContract;
 import com.malec.netCrackerLab.model.MobileContract;
-import com.malec.netCrackerLab.util.AdapterSorterFactory;
 import com.malec.netCrackerLab.util.ArrayAdapter;
-import com.malec.netCrackerLab.util.ConsoleLogger;
+import com.malec.netCrackerLab.util.BubbleSorter;
 import com.malec.netCrackerLab.validator.Condition;
 import com.malec.netCrackerLab.validator.Conditions;
 import com.malec.netCrackerLab.validator.Validator;
 import com.malec.netCrackerLab.validator.ValidatorBuilder;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.net.URISyntaxException;
 import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
@@ -26,8 +26,13 @@ import static org.junit.Assert.assertNull;
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
 
+    @BeforeClass
+    public static void bind() {
+        Injector.bind(new AppModule());
+    }
+
     @Test
-    public void testValidate() throws URISyntaxException {
+    public void testValidate() {
         ContractParser parser = new ContractParser();
 
         ValidatorBuilder<Contract> builder = new ValidatorBuilder<>();
@@ -40,10 +45,7 @@ public class TestContactAdapter {
         ));
         Validator<Contract> validator = builder.build();
 
-        ContractAdapter adapter = parser
-                .parse(Reader.getFileFromResource("tableOfContents.csv"), validator,
-                        new ConsoleLogger()
-                );
+        ContractAdapter adapter = parser.parse(validator);
 
         assertNull(adapter.getById(0));
         assertNull(adapter.getById(1));
@@ -55,9 +57,9 @@ public class TestContactAdapter {
     }
 
     @Test
-    public void testFromFile() throws URISyntaxException {
+    public void testFromFile() {
         ContractParser parser = new ContractParser();
-        ContractAdapter adapter = parser.parse(Reader.getFileFromResource("tableOfContents.csv"));
+        ContractAdapter adapter = parser.parse();
 
         for (int i = 0; i < adapter.size(); i++)
             assertNotNull(adapter.getByIndex(i));
@@ -74,8 +76,7 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayAdapter<Integer> newAdapter = adapter
-                .sorted(AdapterSorterFactory.getSorter(), Comparator.comparingInt(Contract::getId))
+        ArrayAdapter<Integer> newAdapter = adapter.sorted(Comparator.comparingInt(Contract::getId))
                 .filter(it -> ((InternetContract) it).getSpeedLimit() == 4).map(Contract::getId);
 
         assertEquals(15, (int) newAdapter.getByIndex(0));
@@ -111,9 +112,8 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter.sorted(AdapterSorterFactory.getBubbleSorter(),
-                Comparator.comparingInt(Contract::getId)
-        );
+        ContractAdapter sorted = adapter
+                .sorted(new BubbleSorter(), Comparator.comparingInt(Contract::getId));
         assertEquals(0, (int) sorted.getByIndex(0).getId());
         assertEquals(2, (int) sorted.getByIndex(1).getId());
         assertEquals(15, (int) sorted.getByIndex(2).getId());
@@ -123,11 +123,10 @@ public class TestContactAdapter {
     @Test
     public void testQuickSort() {
         ContractAdapter adapter = new ContractAdapter();
+        Injector.inject(adapter);
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter.sorted(AdapterSorterFactory.getSorter(),
-                Comparator.comparingLong(Contract::getStartDate)
-        );
+        ContractAdapter sorted = adapter.sorted(Comparator.comparingLong(Contract::getStartDate));
         assertEquals(15, (int) sorted.getByIndex(0).getId());
         assertEquals(42, (int) sorted.getByIndex(1).getId());
         assertEquals(0, (int) sorted.getByIndex(2).getId());

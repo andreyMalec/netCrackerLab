@@ -1,6 +1,7 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.io.CSVReader;
+import com.malec.netCrackerLab.di.Injector;
+import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.InternetContract;
 import com.malec.netCrackerLab.model.MobileContract;
@@ -11,16 +12,25 @@ import com.malec.netCrackerLab.util.Logger;
 import com.malec.netCrackerLab.validator.ValidationResult;
 import com.malec.netCrackerLab.validator.Validator;
 
-import java.io.File;
+import javax.inject.Inject;
 
 import static com.malec.netCrackerLab.util.Ext.append;
 import static com.malec.netCrackerLab.util.Ext.newLine;
 
 public class ContractParser {
-    public ContractAdapter parse(File file, Validator<Contract> validator, Logger logger) {
+    @Inject
+    private Reader reader;
+    @Inject
+    private CSVParser parser;
+    @Inject
+    private Logger logger;
+
+    public ContractParser() {
+        Injector.inject(this);
+    }
+
+    public ContractAdapter parse(Validator<Contract> validator) {
         ContractAdapter adapter = new ContractAdapter();
-        CSVReader reader = new CSVReader(file);
-        CSVParser parser = new CSVParser();
 
         for (String line : reader.readLines()) {
             String[] sourceValues = line.split(",");
@@ -71,16 +81,8 @@ public class ContractParser {
         logger.note(sb.toString());
     }
 
-    public ContractAdapter parse(File file, Logger logger) {
-        return parse(file, null, logger);
-    }
-
-    public ContractAdapter parse(File file, Validator<Contract> validator) {
-        return parse(file, validator, null);
-    }
-
-    public ContractAdapter parse(File file) {
-        return parse(file, null, null);
+    public ContractAdapter parse() {
+        return parse(null);
     }
 
     private Class<? extends Contract> parseClass(String s) {

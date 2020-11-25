@@ -1,5 +1,6 @@
 package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.util.AdapterSorter;
 import com.malec.netCrackerLab.util.ArrayAdapter;
@@ -7,9 +8,15 @@ import com.malec.netCrackerLab.util.ArrayAdapter;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+import javax.inject.Inject;
+
 public class ContractAdapter extends ArrayAdapter<Contract> {
+    @Inject
+    protected AdapterSorter sorter;
+
     public ContractAdapter() {
         super();
+        Injector.inject(this);
     }
 
     public ContractAdapter(ContractAdapter anotherAdapter) {
@@ -80,6 +87,10 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     @Override
     public ContractAdapter sorted(AdapterSorter sorter, Comparator<? super Contract> comparator) {
         return new ContractAdapter(super.sorted(sorter, comparator));
+    }
+
+    public ContractAdapter sorted(Comparator<? super Contract> comparator) {
+        return sorted(sorter, comparator);
     }
 
     /**
