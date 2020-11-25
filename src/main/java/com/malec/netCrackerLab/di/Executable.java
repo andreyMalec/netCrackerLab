@@ -4,9 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Executable {
-    private Method method;
-    private Object[] args;
-    private Object target;
+    private final Method method;
+    private final Object[] args;
+    private final Object target;
 
     public Executable(Method method, Object[] args, Object target) {
         this.method = method;

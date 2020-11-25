@@ -104,7 +104,7 @@ public class TestArrayAdapter {
 
     @Test
     public void testRemoveAt() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>();
         fill(adapter);
 
         String rm = adapter.removeAt(2);

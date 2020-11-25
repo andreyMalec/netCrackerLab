@@ -1,5 +1,7 @@
-package com.malec.netCrackerLab.di;
+package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.di.Module;
+import com.malec.netCrackerLab.di.Provides;
 import com.malec.netCrackerLab.io.CSVReader;
 import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.parser.CSVParser;
@@ -13,7 +15,7 @@ import java.net.URISyntaxException;
 
 import javax.inject.Singleton;
 
-public class AppModule {
+public class AppModule extends Module {
     @Provides
     @Singleton
     Reader reader(File file) {

@@ -1,6 +1,5 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.di.AppModule;
 import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
@@ -28,7 +27,7 @@ public class TestContactAdapter {
 
     @BeforeClass
     public static void bind() {
-        Injector.bind(new AppModule());
+        Injector.bind(AppModule.class);
     }
 
     @Test

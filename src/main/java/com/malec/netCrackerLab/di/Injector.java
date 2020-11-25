@@ -1,5 +1,6 @@
 package com.malec.netCrackerLab.di;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,8 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 public class Injector {
-    private static Map<String, Executable> binds = new HashMap<>();
-    private static Map<String, Object> bindsSingle = new HashMap<>();
+    private static final Map<String, Executable> binds = new HashMap<>();
+    private static final Map<String, Object> bindsSingle = new HashMap<>();
 
     private static boolean isBound = false;
 
@@ -41,25 +42,28 @@ public class Injector {
             }
     }
 
-    public static void bind(Object module) {
-        for (Method method : getAllMethods(module.getClass()))
-            if (method.isAnnotationPresent(Provides.class)) {
-                method.setAccessible(true);
+    public static void bind(Class<? extends Module> module) {
+        Constructor<?> constructor = module.getConstructors()[0];
+        try {
+            constructor.setAccessible(true);
+            Object instance = constructor.newInstance();
+            for (Method method : getAllMethods(module))
+                if (method.isAnnotationPresent(Provides.class)) {
+                    method.setAccessible(true);
 
-                if (method.isAnnotationPresent(Singleton.class)) {
-                    try {
+                    if (method.isAnnotationPresent(Singleton.class)) {
                         bindsSingle.put(method.getReturnType().getCanonicalName(),
-                                method.invoke(module, getArgs(method))
+                                method.invoke(instance, getArgs(method))
                         );
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                } else
-                    binds.put(method.getReturnType().getCanonicalName(),
-                            new Executable(method, getArgs(method), module)
-                    );
-                isBound = true;
-            }
+                    } else
+                        binds.put(method.getReturnType().getCanonicalName(),
+                                new Executable(method, getArgs(method), instance)
+                        );
+                    isBound = true;
+                }
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Method[] getAllMethods(Class<?> clazz) {
@@ -92,10 +96,5 @@ public class Injector {
             args[i++] = value;
         }
         return args;
-    }
-
-    public static void bind(Object... modules) {
-        for (Object module : modules)
-            bind(module);
     }
 }

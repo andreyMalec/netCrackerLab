@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ValidatorBuilder<T> {
-    private List<Condition<T>> conditions = new ArrayList<>();
+    private final List<Condition<T>> conditions = new ArrayList<>();
 
     public ValidatorBuilder<T> add(Condition<T> condition) {
         conditions.add(condition);
@@ -12,6 +12,6 @@ public class ValidatorBuilder<T> {
     }
 
     public Validator<T> build() {
-        return new Validator<T>(conditions);
+        return new Validator<>(conditions);
     }
 }

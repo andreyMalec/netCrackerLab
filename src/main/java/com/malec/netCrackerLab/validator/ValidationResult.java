@@ -1,8 +1,8 @@
 package com.malec.netCrackerLab.validator;
 
 public class ValidationResult {
-    private boolean isValid;
-    private String message;
+    private final boolean isValid;
+    private final String message;
 
     public ValidationResult(boolean isValid, String message) {
         this.isValid = isValid;

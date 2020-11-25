@@ -5,7 +5,7 @@ public enum Conditions {
             "less than"), GREATER_THAN_OR_EQUALS("greater than or equals to"), LESS_THAN_OR_EQUALS(
             "less than or equals to");
 
-    private String value;
+    private final String value;
 
     Conditions(String value) {
         this.value = value;

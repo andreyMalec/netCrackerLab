@@ -68,6 +68,7 @@ public class ArrayAdapter<T> {
         System.arraycopy(data, index, data, index + 1, size - index);
     }
 
+    @SuppressWarnings("unchecked")
     public T removeAt(int index) {
         checkBounds(index);
 
@@ -95,6 +96,7 @@ public class ArrayAdapter<T> {
         return indexOf(element) != -1;
     }
 
+    @SuppressWarnings("unchecked")
     public T getByIndex(int index) {
         checkBounds(index);
 

@@ -13,6 +13,7 @@
                     <target>8</target>
                 </configuration>
                 <groupId>org.apache.maven.plugins</groupId>
+                <version>${compiler-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -26,7 +27,7 @@
         <dependency>
             <artifactId>javax.inject</artifactId>
             <groupId>javax.inject</groupId>
-            <version>1</version>
+            <version>${javax.version}</version>
         </dependency>
     </dependencies>
     <groupId>com.malec</groupId>
@@ -34,8 +35,10 @@
 
     <properties>
         <junit.version>4.13.1</junit.version>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <javax.version>1</javax.version>
     </properties>
 
-    <version>0.21</version>
+    <version>0.22</version>
 
 </project>
