@@ -1,6 +1,5 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
@@ -13,7 +12,6 @@ import com.malec.netCrackerLab.validator.Conditions;
 import com.malec.netCrackerLab.validator.Validator;
 import com.malec.netCrackerLab.validator.ValidatorBuilder;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Comparator;
@@ -24,11 +22,6 @@ import static org.junit.Assert.assertNull;
 
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
-
-    @BeforeClass
-    public static void bind() {
-        Injector.bind(AppModule.class);
-    }
 
     @Test
     public void testValidate() {
@@ -122,7 +115,7 @@ public class TestContactAdapter {
     @Test
     public void testQuickSort() {
         ContractAdapter adapter = new ContractAdapter();
-        Injector.inject(adapter);
+        Injector.get().inject(adapter);
         fillRandom(adapter);
 
         ContractAdapter sorted = adapter.sorted(Comparator.comparingLong(Contract::getStartDate));

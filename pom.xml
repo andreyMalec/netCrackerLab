@@ -25,18 +25,18 @@
             <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <artifactId>javax.inject</artifactId>
-            <groupId>javax.inject</groupId>
-            <version>${javax.version}</version>
+            <artifactId>Processor</artifactId>
+            <groupId>com.malec</groupId>
+            <version>${jProcessor.version}</version>
         </dependency>
     </dependencies>
     <groupId>com.malec</groupId>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <junit.version>4.13.1</junit.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <javax.version>1</javax.version>
+        <junit.version>4.13.1</junit.version>
+        <jProcessor.version>1.0</jProcessor.version>
     </properties>
 
     <version>0.22</version>

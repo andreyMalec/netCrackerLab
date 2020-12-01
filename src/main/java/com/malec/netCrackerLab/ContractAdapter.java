@@ -1,6 +1,5 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.util.AdapterSorter;
 import com.malec.netCrackerLab.util.ArrayAdapter;
@@ -12,11 +11,11 @@ import javax.inject.Inject;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
     @Inject
-    protected AdapterSorter sorter;
+    AdapterSorter sorter;
 
     public ContractAdapter() {
         super();
-        Injector.inject(this);
+        Injector.get().inject(this);
     }
 
     public ContractAdapter(ContractAdapter anotherAdapter) {

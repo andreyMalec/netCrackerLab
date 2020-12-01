@@ -1,6 +1,5 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.InternetContract;
@@ -19,14 +18,14 @@ import static com.malec.netCrackerLab.util.Ext.newLine;
 
 public class ContractParser {
     @Inject
-    private Reader reader;
+    Reader reader;
     @Inject
-    private CSVParser parser;
+    CSVParser parser;
     @Inject
-    private Logger logger;
+    Logger logger;
 
     public ContractParser() {
-        Injector.inject(this);
+        Injector.get().inject(this);
     }
 
     public ContractAdapter parse(Validator<Contract> validator) {

@@ -1,7 +1,5 @@
 package com.malec.netCrackerLab;
 
-import com.malec.netCrackerLab.di.Module;
-import com.malec.netCrackerLab.di.Provides;
 import com.malec.netCrackerLab.io.CSVReader;
 import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.parser.CSVParser;
@@ -15,34 +13,42 @@ import java.net.URISyntaxException;
 
 import javax.inject.Singleton;
 
-public class AppModule extends Module {
+import jProcessor.Module;
+import jProcessor.Provides;
+
+@Module
+public class AppModule {
     @Provides
     @Singleton
-    Reader reader(File file) {
+    public File file() {
+        try {
+            return Reader.getFileFromResource("tableOfContents.csv");
+        } catch (URISyntaxException e) {
+            return null;
+        }
+    }
+
+    @Provides
+    @Singleton
+    public Reader reader(File file) {
         return new CSVReader(file);
     }
 
     @Provides
     @Singleton
-    AdapterSorter sorter() {
+    public AdapterSorter sorter() {
         return AdapterSorterFactory.getSorter();
     }
 
     @Provides
     @Singleton
-    CSVParser parser() {
+    public CSVParser parser() {
         return new CSVParser();
     }
 
     @Provides
     @Singleton
-    Logger logger() {
+    public Logger logger() {
         return new ConsoleLogger();
-    }
-
-    @Provides
-    @Singleton
-    File file() throws URISyntaxException {
-        return Reader.getFileFromResource("tableOfContents.csv");
     }
 }
