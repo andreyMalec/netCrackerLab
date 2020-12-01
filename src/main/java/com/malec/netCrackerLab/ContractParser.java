@@ -23,12 +23,14 @@ public class ContractParser {
     CSVParser parser;
     @Inject
     Logger logger;
+    @Inject
+    Validator<Contract> validator;
 
     public ContractParser() {
         Injector.get().inject(this);
     }
 
-    public ContractAdapter parse(Validator<Contract> validator) {
+    public ContractAdapter parse() {
         ContractAdapter adapter = new ContractAdapter();
 
         for (String line : reader.readLines()) {
@@ -78,10 +80,6 @@ public class ContractParser {
         else
             append(sb, newLine());
         logger.note(sb.toString());
-    }
-
-    public ContractAdapter parse() {
-        return parse(null);
     }
 
     private Class<? extends Contract> parseClass(String s) {

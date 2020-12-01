@@ -25,7 +25,7 @@
             <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <artifactId>Processor</artifactId>
+            <artifactId>jProcessor-compiler</artifactId>
             <groupId>com.malec</groupId>
             <version>${jProcessor.version}</version>
         </dependency>
@@ -35,10 +35,10 @@
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <jProcessor.version>1.3</jProcessor.version>
         <junit.version>4.13.1</junit.version>
-        <jProcessor.version>1.0</jProcessor.version>
     </properties>
 
-    <version>0.22</version>
+    <version>0.24</version>
 
 </project>

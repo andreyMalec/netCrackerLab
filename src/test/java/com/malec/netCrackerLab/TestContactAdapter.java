@@ -7,10 +7,6 @@ import com.malec.netCrackerLab.model.InternetContract;
 import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.util.ArrayAdapter;
 import com.malec.netCrackerLab.util.BubbleSorter;
-import com.malec.netCrackerLab.validator.Condition;
-import com.malec.netCrackerLab.validator.Conditions;
-import com.malec.netCrackerLab.validator.Validator;
-import com.malec.netCrackerLab.validator.ValidatorBuilder;
 
 import org.junit.Test;
 
@@ -27,17 +23,7 @@ public class TestContactAdapter {
     public void testValidate() {
         ContractParser parser = new ContractParser();
 
-        ValidatorBuilder<Contract> builder = new ValidatorBuilder<>();
-        builder.add(new Condition<>(2, Contract::getId,
-                ((expected, actual) -> actual % expected == 0)
-        ));
-        builder.add(new Condition<>("lera", contract -> contract.getClient().getFullName()));
-        builder.add(new Condition<>(9, Conditions.GREATER_THAN_OR_EQUALS, Contract::getId,
-                (expected, actual) -> expected >= actual
-        ));
-        Validator<Contract> validator = builder.build();
-
-        ContractAdapter adapter = parser.parse(validator);
+        ContractAdapter adapter = parser.parse();
 
         assertNull(adapter.getById(0));
         assertNull(adapter.getById(1));
@@ -51,6 +37,7 @@ public class TestContactAdapter {
     @Test
     public void testFromFile() {
         ContractParser parser = new ContractParser();
+        parser.validator = null;
         ContractAdapter adapter = parser.parse();
 
         for (int i = 0; i < adapter.size(); i++)
