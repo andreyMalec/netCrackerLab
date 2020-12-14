@@ -55,9 +55,8 @@ public class TestArrayAdapter {
         ArrayAdapter<String> adapter = new ArrayAdapter<>();
         fillRandom(adapter);
 
-        ArrayAdapter<String> sorted = adapter.sorted(AdapterSorterFactory.getBubbleSorter(),
-                Comparator.comparingInt(it -> it.charAt(0))
-        );
+        ArrayAdapter<String> sorted = adapter
+                .sorted(AdapterSorterFactory.getBubbleSorter(), Comparator.comparingInt(it -> it.charAt(0)));
         assertEquals("abc", sorted.getByIndex(0));
         assertEquals("qwerty", sorted.getByIndex(1));
         assertEquals("random", sorted.getByIndex(2));
@@ -71,9 +70,8 @@ public class TestArrayAdapter {
         adapter.swap(0, 2);
         adapter.swap(1, 2);
 
-        ArrayAdapter<String> sorted = adapter.sorted(AdapterSorterFactory.getSorter(),
-                Comparator.comparingInt(it -> it.charAt(0))
-        );
+        ArrayAdapter<String> sorted = adapter
+                .sorted(AdapterSorterFactory.getSorter(), Comparator.comparingInt(it -> it.charAt(0)));
         assertEquals("1", sorted.getByIndex(0));
         assertEquals("2", sorted.getByIndex(1));
         assertEquals("3", sorted.getByIndex(2));

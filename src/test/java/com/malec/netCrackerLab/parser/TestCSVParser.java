@@ -17,9 +17,14 @@ public class TestCSVParser {
 
     @Test
     public void testTestClassParser() {
-        TestClass testClass = new TestClass(1, "test", new TestClass2(11, 1.2, 1.3f,
-                new TestClass3((byte) 100, (short) 200, new TestClass4('l', true))
-        ), new TestClass3((byte) 30, (short) 300, new TestClass4('o', false)),
+        TestClass testClass = new TestClass(1,
+                "test",
+                new TestClass2(11,
+                        1.2,
+                        1.3f,
+                        new TestClass3((byte) 100, (short) 200, new TestClass4('l', true))
+                ),
+                new TestClass3((byte) 30, (short) 300, new TestClass4('o', false)),
                 new TestClass4('l', false)
         );
 
@@ -33,9 +38,7 @@ public class TestCSVParser {
 
     @Test
     public void testContractParser() {
-        Contract contract = new Contract(0, 123L, 456L,
-                new Client(0, "name", 0L, Gender.FEMALE, 1234, 56789)
-        );
+        Contract contract = new Contract(0, 123L, 456L, new Client(0, "name", 0L, Gender.FEMALE, 1234, 56789));
 
         String contractCSV = parser.to(contract);
 
@@ -44,9 +47,7 @@ public class TestCSVParser {
         assertNotNull(contractConstructed);
         assertEquals(contract.getId(), contractConstructed.getId());
         assertEquals(contract.getStartDate(), contractConstructed.getStartDate());
-        assertEquals(contract.getClient().getFullName(),
-                contractConstructed.getClient().getFullName()
-        );
+        assertEquals(contract.getClient().getFullName(), contractConstructed.getClient().getFullName());
         assertEquals(contract.getClient().getSex(), contractConstructed.getClient().getSex());
     }
 

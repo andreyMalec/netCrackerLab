@@ -3,13 +3,20 @@ package com.malec.netCrackerLab.model;
 import com.malec.netCrackerLab.util.DateConverter;
 
 public class Client {
-    private Integer id;
-    private String fullName;
-    private Long birthday;
-    private Gender sex;
-    private Integer passportSeries, passportNumber;
+    private final Integer id;
+    private final String fullName;
+    private final Long birthday;
+    private final Gender sex;
+    private final Integer passportSeries, passportNumber;
 
-    public Client(Integer id, String fullName, Long birthday, Gender sex, Integer passportSeries, Integer passportNumber) {
+    public Client(
+            Integer id,
+            String fullName,
+            Long birthday,
+            Gender sex,
+            Integer passportSeries,
+            Integer passportNumber
+    ) {
         this.id = id;
         this.fullName = fullName;
         this.birthday = birthday;
@@ -48,6 +55,8 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" + "id=" + id + ", fullName='" + fullName + '\'' + ", birthday=" + birthday + ", sex=" + sex + ", passportSeries=" + passportSeries + ", passportNumber=" + passportNumber + '}';
+        return "Client{" + "id=" + id + ", fullName='" + fullName + '\'' + ", birthday=" + birthday +
+                ", sex=" + sex + ", passportSeries=" + passportSeries + ", passportNumber=" + passportNumber +
+                '}';
     }
 }

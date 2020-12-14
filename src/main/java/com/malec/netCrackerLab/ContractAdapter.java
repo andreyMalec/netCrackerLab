@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
     @Inject
-    AdapterSorter sorter;
+    public AdapterSorter sorter;
 
     public ContractAdapter() {
         super();
@@ -20,6 +20,7 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
 
     public ContractAdapter(ContractAdapter anotherAdapter) {
         super(anotherAdapter);
+        this.sorter = anotherAdapter.sorter;
     }
 
     private ContractAdapter(ArrayAdapter<Contract> superAdapter) {
@@ -107,7 +108,8 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
     public ContractAdapter clone() {
         try {
             super.clone();
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         return new ContractAdapter(this);
     }

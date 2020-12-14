@@ -35,10 +35,10 @@
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <jProcessor.version>1.3</jProcessor.version>
+        <jProcessor.version>1.8.2</jProcessor.version>
         <junit.version>4.13.1</junit.version>
     </properties>
 
-    <version>0.24</version>
+    <version>0.25</version>
 
 </project>

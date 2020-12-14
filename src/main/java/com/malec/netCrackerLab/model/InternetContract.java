@@ -1,7 +1,7 @@
 package com.malec.netCrackerLab.model;
 
 public class InternetContract extends Contract {
-    private Integer speedLimit;
+    private final Integer speedLimit;
 
     public InternetContract(Integer speedLimit, Integer id, Long startDate, Long endDate, Client client) {
         super(id, startDate, endDate, client);

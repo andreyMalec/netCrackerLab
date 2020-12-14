@@ -2,14 +2,20 @@ package com.malec.netCrackerLab.parser;
 
 public class TestClass {
     public int testInt;
-    @Ignore
+    @ParserIgnore
     public int ignore;
     public String testString;
     public TestClass2 testClass2;
     public TestClass3 testClass3;
     public TestClass4 testClass4;
 
-    public TestClass(int testInt, String testString, TestClass2 testClass2, TestClass3 testClass3, TestClass4 testClass4) {
+    public TestClass(
+            int testInt,
+            String testString,
+            TestClass2 testClass2,
+            TestClass3 testClass3,
+            TestClass4 testClass4
+    ) {
         this.testInt = testInt;
         this.testString = testString;
         this.testClass2 = testClass2;

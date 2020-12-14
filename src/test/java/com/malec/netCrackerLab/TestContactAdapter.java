@@ -21,7 +21,7 @@ public class TestContactAdapter {
 
     @Test
     public void testValidate() {
-        ContractParser parser = new ContractParser();
+        ContractParser parser = Injector.get().getContractParser();
 
         ContractAdapter adapter = parser.parse();
 
@@ -36,7 +36,7 @@ public class TestContactAdapter {
 
     @Test
     public void testFromFile() {
-        ContractParser parser = new ContractParser();
+        ContractParser parser = Injector.get().getContractParser();
         parser.validator = null;
         ContractAdapter adapter = parser.parse();
 
@@ -67,8 +67,7 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ArrayAdapter<Integer> mapped = adapter
-                .map(element -> ((InternetContract) element).getSpeedLimit());
+        ArrayAdapter<Integer> mapped = adapter.map(element -> ((InternetContract) element).getSpeedLimit());
         assertEquals(12, (int) mapped.getByIndex(0));
         assertEquals(4, (int) mapped.getByIndex(1));
         assertEquals(3, (int) mapped.getByIndex(2));
@@ -91,8 +90,7 @@ public class TestContactAdapter {
         ContractAdapter adapter = new ContractAdapter();
         fillRandom(adapter);
 
-        ContractAdapter sorted = adapter
-                .sorted(new BubbleSorter(), Comparator.comparingInt(Contract::getId));
+        ContractAdapter sorted = adapter.sorted(new BubbleSorter(), Comparator.comparingInt(Contract::getId));
         assertEquals(0, (int) sorted.getByIndex(0).getId());
         assertEquals(2, (int) sorted.getByIndex(1).getId());
         assertEquals(15, (int) sorted.getByIndex(2).getId());
@@ -138,6 +136,14 @@ public class TestContactAdapter {
         assertNull(adapter.getById(8));
 
         assertEquals(3, adapter.size());
+    }
+
+    @Test
+    public void testCloneConstructor() {
+        ContractAdapter adapter = new ContractAdapter();
+        ContractAdapter anotherAdapter = new ContractAdapter(adapter);
+
+        assertEquals(adapter.sorter, anotherAdapter.sorter);
     }
 
     private void fill(ContractAdapter adapter) {

@@ -12,21 +12,25 @@ import com.malec.netCrackerLab.validator.ValidationResult;
 import com.malec.netCrackerLab.validator.Validator;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static com.malec.netCrackerLab.util.Ext.append;
 import static com.malec.netCrackerLab.util.Ext.newLine;
 
 public class ContractParser {
-    @Inject
-    Reader reader;
-    @Inject
-    CSVParser parser;
-    @Inject
-    Logger logger;
-    @Inject
-    Validator<Contract> validator;
+    private final Reader reader;
+    private final CSVParser parser;
 
-    public ContractParser() {
+    @Inject
+    public Logger logger;
+    @Inject
+    public Validator<Contract> validator;
+
+    @Inject
+    @Singleton
+    public ContractParser(Reader reader, CSVParser parser) {
+        this.reader = reader;
+        this.parser = parser;
         Injector.get().inject(this);
     }
 
@@ -74,9 +78,7 @@ public class ContractParser {
         if (errorCount != 1)
             append(sb, "s");
         if (errorCount > 0)
-            append(sb, newLine(), "Current contract [", currentContract, "] will be ignored",
-                    newLine()
-            );
+            append(sb, newLine(), "Current contract [", currentContract, "] will be ignored", newLine());
         else
             append(sb, newLine());
         logger.note(sb.toString());

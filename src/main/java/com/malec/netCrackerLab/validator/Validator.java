@@ -42,7 +42,9 @@ public class Validator<T> {
         return sb.toString();
     }
 
-    private void appendCondition(StringBuilder sb, Object expected, Object actual, boolean isValid, Conditions type) {
+    private void appendCondition(
+            StringBuilder sb, Object expected, Object actual, boolean isValid, Conditions type
+    ) {
         if (type == null) {
             append(sb, "expected: [", expected, "], actual: [", actual, "]");
         } else {

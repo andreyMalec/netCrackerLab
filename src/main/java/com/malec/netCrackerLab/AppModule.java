@@ -37,11 +37,12 @@ public class AppModule {
     @Singleton
     public Validator<Contract> validator() {
         ValidatorBuilder<Contract> builder = new ValidatorBuilder<>();
-        builder.add(new Condition<>(2, Contract::getId,
-                ((expected, actual) -> actual % expected == 0)
-        ));
+        builder.add(new Condition<>(2, Contract::getId, ((expected, actual) -> actual % expected == 0)));
         builder.add(new Condition<>("lera", contract -> contract.getClient().getFullName()));
-        builder.add(new Condition<>(9, Conditions.GREATER_THAN_OR_EQUALS, Contract::getId,
+        builder.add(new Condition<>(
+                9,
+                Conditions.GREATER_THAN_OR_EQUALS,
+                Contract::getId,
                 (expected, actual) -> expected >= actual
         ));
         return builder.build();

@@ -18,10 +18,14 @@ public class TestValidator {
         Client client = new Client(0, "name", 2000L, Gender.FEMALE, 123, 456789);
 
         builder.add(new Condition<>("surname", Client::getFullName));
-        builder.add(new Condition<>(125, Conditions.GREATER_THAN, Client::getPassportSeries,
+        builder.add(new Condition<>(125,
+                Conditions.GREATER_THAN,
+                Client::getPassportSeries,
                 (expected, actual) -> expected > actual
         ));
-        builder.add(new Condition<>(2048L, Conditions.LESS_THAN_OR_EQUALS, Client::getBirthday,
+        builder.add(new Condition<>(2048L,
+                Conditions.LESS_THAN_OR_EQUALS,
+                Client::getBirthday,
                 (expected, actual) -> expected <= actual
         ));
 

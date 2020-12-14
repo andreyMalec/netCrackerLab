@@ -141,7 +141,8 @@ public class ArrayAdapter<T> {
     public ArrayAdapter<T> clone() {
         try {
             super.clone();
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         return new ArrayAdapter<>(this);
     }

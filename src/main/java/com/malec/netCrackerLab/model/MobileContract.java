@@ -1,9 +1,11 @@
 package com.malec.netCrackerLab.model;
 
 public class MobileContract extends Contract {
-    private Integer minutes, sms, gb;
+    private final Integer minutes, sms, gb;
 
-    public MobileContract(Integer minutes, Integer sms, Integer gb, Integer id, Long startDate, Long endDate, Client client) {
+    public MobileContract(
+            Integer minutes, Integer sms, Integer gb, Integer id, Long startDate, Long endDate, Client client
+    ) {
         super(id, startDate, endDate, client);
 
         this.minutes = minutes;

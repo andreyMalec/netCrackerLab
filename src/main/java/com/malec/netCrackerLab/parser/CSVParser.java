@@ -10,15 +10,15 @@ import java.util.List;
 
 public class CSVParser implements ClassParser {
     private static boolean isBaseType(Class<?> type) {
-        return type.isAssignableFrom(String.class) || type.isEnum() || type
-                .isPrimitive() || isWrappedType(type);
+        return type.isAssignableFrom(String.class) || type.isEnum() || type.isPrimitive() ||
+                isWrappedType(type);
     }
 
     private static boolean isWrappedType(Class<?> type) {
-        return type.isAssignableFrom(Integer.class) || type.isAssignableFrom(Double.class) || type
-                .isAssignableFrom(Float.class) || type.isAssignableFrom(Boolean.class) || type
-                .isAssignableFrom(Long.class) || type.isAssignableFrom(Character.class) || type
-                .isAssignableFrom(Byte.class) || type.isAssignableFrom(Short.class);
+        return type.isAssignableFrom(Integer.class) || type.isAssignableFrom(Double.class) ||
+                type.isAssignableFrom(Float.class) || type.isAssignableFrom(Boolean.class) ||
+                type.isAssignableFrom(Long.class) || type.isAssignableFrom(Character.class) ||
+                type.isAssignableFrom(Byte.class) || type.isAssignableFrom(Short.class);
     }
 
     @Override
@@ -44,7 +44,9 @@ public class CSVParser implements ClassParser {
     private static class CSVClassConstructor {
         private static String[] values;
 
-        private static <T> T from(String source, Class<T> jClass) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+        private static <T> T from(
+                String source, Class<T> jClass
+        ) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
             values = valuesFromCSV(source);
 
             return createClassInstance(jClass);
@@ -71,17 +73,13 @@ public class CSVParser implements ClassParser {
 
         private static Class<?>[] getFieldsTypes(Class<?> jClass) {
             Constructor<?>[] constructors = jClass.getDeclaredConstructors();
-            int maxParamsCount = 0;
-            Constructor<?> maxParamsCountConstructor = constructors[0];
-            for (Constructor<?> constructor : constructors) {
-                int paramsCount = constructor.getParameterCount();
-                if (maxParamsCount < paramsCount) {
-                    maxParamsCount = paramsCount;
-                    maxParamsCountConstructor = constructor;
-                }
-            }
+            Constructor<?> annotatedConstructor = constructors[0];
+            if (constructors.length > 1)
+                for (Constructor<?> constructor : constructors)
+                    if (constructor.getAnnotation(ParserConstructor.class) != null)
+                        annotatedConstructor = constructor;
 
-            return maxParamsCountConstructor.getParameterTypes();
+            return annotatedConstructor.getParameterTypes();
         }
 
         private static List<Object> makeParams(Class<?>[] types) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
@@ -99,7 +97,9 @@ public class CSVParser implements ClassParser {
         }
 
         @SuppressWarnings("unchecked")
-        private static Object createBaseInstance(Class<?> type, String value) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        private static Object createBaseInstance(
+                Class<?> type, String value
+        ) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
             if (type.isPrimitive())
                 return createPrimitive(type, value);
 
@@ -172,7 +172,7 @@ public class CSVParser implements ClassParser {
             Field[] fieldsNotAnnotated = new Field[fields.length];
             int length = 0;
             for (Field value : fields)
-                if (value.getAnnotation(Ignore.class) == null)
+                if (value.getAnnotation(ParserIgnore.class) == null)
                     fieldsNotAnnotated[length++] = value;
             Field[] fieldsNotAnnotatedTrim = new Field[length];
             System.arraycopy(fieldsNotAnnotated, 0, fieldsNotAnnotatedTrim, 0, length);

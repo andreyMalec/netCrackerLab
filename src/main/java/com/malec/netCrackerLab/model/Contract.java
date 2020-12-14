@@ -1,9 +1,9 @@
 package com.malec.netCrackerLab.model;
 
 public class Contract {
-    private Integer id;
-    private Long startDate, endDate;
-    private Client client;
+    private final Integer id;
+    private final Long startDate, endDate;
+    private final Client client;
 
     public Contract(Integer id, Long startDate, Long endDate, Client client) {
         this.id = id;
@@ -30,6 +30,7 @@ public class Contract {
 
     @Override
     public String toString() {
-        return "Contract{" + "id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", client=" + client + '}';
+        return "Contract{" + "id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", client=" +
+                client + '}';
     }
 }

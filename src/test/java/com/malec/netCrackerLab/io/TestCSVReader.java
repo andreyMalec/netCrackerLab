@@ -14,9 +14,7 @@ public class TestCSVReader {
         CSVReader reader = new CSVReader(Reader.getFileFromResource("tableOfContents.csv"));
         String[] lines = reader.readLines();
 
-        assertEquals("internet, 0,  123,    456,    0, name,    0,    male,   1234, 56789,  111",
-                lines[0]
-        );
+        assertEquals("internet, 0,  123,    456,    0, name,    0,    male,   1234, 56789,  111", lines[0]);
     }
 
     @Test
