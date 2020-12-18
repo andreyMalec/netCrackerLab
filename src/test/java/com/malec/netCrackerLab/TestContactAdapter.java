@@ -1,5 +1,6 @@
 package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.di.Injector;
 import com.malec.netCrackerLab.model.Client;
 import com.malec.netCrackerLab.model.Contract;
 import com.malec.netCrackerLab.model.Gender;
@@ -8,6 +9,7 @@ import com.malec.netCrackerLab.model.MobileContract;
 import com.malec.netCrackerLab.util.ArrayAdapter;
 import com.malec.netCrackerLab.util.BubbleSorter;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Comparator;
@@ -19,9 +21,15 @@ import static org.junit.Assert.assertNull;
 public class TestContactAdapter {
     private static final Client client = new Client(0, "", 0L, Gender.MALE, 0, 0);
 
+    @BeforeClass
+    public static void init() {
+        Injector.init(AppModule.class);
+    }
+
     @Test
     public void testValidate() {
-        ContractParser parser = Injector.get().getContractParser();
+        ContractParser parser = new ContractParser();
+        Injector.inject(parser);
 
         ContractAdapter adapter = parser.parse();
 
@@ -36,7 +44,8 @@ public class TestContactAdapter {
 
     @Test
     public void testFromFile() {
-        ContractParser parser = Injector.get().getContractParser();
+        ContractParser parser = new ContractParser();
+        Injector.inject(parser);
         parser.validator = null;
         ContractAdapter adapter = parser.parse();
 
@@ -100,7 +109,7 @@ public class TestContactAdapter {
     @Test
     public void testQuickSort() {
         ContractAdapter adapter = new ContractAdapter();
-        Injector.get().inject(adapter);
+        Injector.inject(adapter);
         fillRandom(adapter);
 
         ContractAdapter sorted = adapter.sorted(Comparator.comparingLong(Contract::getStartDate));

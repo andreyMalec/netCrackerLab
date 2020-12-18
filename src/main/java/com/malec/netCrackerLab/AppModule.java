@@ -1,5 +1,6 @@
 package com.malec.netCrackerLab;
 
+import com.malec.netCrackerLab.di.Provides;
 import com.malec.netCrackerLab.io.CSVReader;
 import com.malec.netCrackerLab.io.Reader;
 import com.malec.netCrackerLab.model.Contract;
@@ -18,10 +19,6 @@ import java.net.URISyntaxException;
 
 import javax.inject.Singleton;
 
-import jProcessor.Module;
-import jProcessor.Provides;
-
-@Module
 public class AppModule {
     @Provides
     @Singleton

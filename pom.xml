@@ -9,8 +9,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
                 <groupId>org.apache.maven.plugins</groupId>
                 <version>${compiler-plugin.version}</version>
@@ -25,9 +25,9 @@
             <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <artifactId>jProcessor-compiler</artifactId>
-            <groupId>com.malec</groupId>
-            <version>${jProcessor.version}</version>
+            <artifactId>javax.inject</artifactId>
+            <groupId>javax.inject</groupId>
+            <version>1</version>
         </dependency>
     </dependencies>
     <groupId>com.malec</groupId>
